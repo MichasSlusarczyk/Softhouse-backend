@@ -4,8 +4,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import pl.polsl.softhouse.util.exception.CryptException;
-
 /**
  * A convenience class for implementing SHA-256 algorithm
  * and general byte and hex string conversions.
@@ -52,26 +50,22 @@ public class Hash {
      * A static method used for hashing a provided text by passing it through SHA-256.
      * @param text text to be hashed.
      * @return array of bytes representing the hash of the text.
-     * @throws CryptException This exception is thrown when an error occurs during hashing.
+     * @throws NoSuchAlgorithmException This exception is thrown when a particular cryptographic algorithm is requested but is not available in the environment.
      */
-    public static byte[] hashText(String text) throws CryptException {
+    public static byte[] hashText(String text) throws NoSuchAlgorithmException {
 
         MessageDigest digest = null;
-        try {
-            digest = MessageDigest.getInstance("SHA-256");
-            return digest.digest(text.getBytes(StandardCharsets.UTF_8));
-        } catch (NoSuchAlgorithmException e) {
-            throw new CryptException(e.getMessage());
-        }
+        digest = MessageDigest.getInstance("SHA-256");
+        return digest.digest(text.getBytes(StandardCharsets.UTF_8));
     }
 
     /**
      * Creates a new Hash object from a plain text string.
      * @param plain text string to hash.
      * @return new Hash with the hashed string.
-     * @throws CryptException Thrown when a cryptographic error occurs.
+     * @throws NoSuchAlgorithmException This exception is thrown when a particular cryptographic algorithm is requested but is not available in the environment.
      */
-    public static Hash fromPlain(String plain) throws CryptException {
+    public static Hash fromPlain(String plain) throws NoSuchAlgorithmException {
         return new Hash(hashText(plain));
     }
 
