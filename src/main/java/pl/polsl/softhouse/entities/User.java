@@ -1,4 +1,4 @@
-package pl.polsl.softhouse.user;
+package pl.polsl.softhouse.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,14 +16,14 @@ import javax.persistence.UniqueConstraint;
 )
 public class User {
     
+    private static final String GEN_NAME = "user_sequence";
     public static final int MAX_USERNAME_LENGTH = 64;
+    public static final int MAX_NAME_LENGTH = 64;
 
     @Id
-    @SequenceGenerator(name="user_sequence", allocationSize=1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="user_sequence")
+    @SequenceGenerator(name=GEN_NAME, allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator=GEN_NAME)
     private Long id;
-
-    // TODO: First and last name maybe?
 
     @Column(nullable = false, length = MAX_USERNAME_LENGTH)
     private String username;
@@ -34,11 +34,17 @@ public class User {
     @Column(nullable = false)
     private boolean active = true;
 
-    public long getId() {
+    @Column(nullable = false, length = MAX_NAME_LENGTH)
+    private String firstName;
+
+    @Column(nullable = false, length = MAX_NAME_LENGTH)
+    private String lastName;
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -64,5 +70,21 @@ public class User {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }
