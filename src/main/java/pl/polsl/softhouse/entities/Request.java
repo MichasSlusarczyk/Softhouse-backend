@@ -15,7 +15,7 @@ import javax.persistence.SequenceGenerator;
 @Entity
 public class Request extends AbstractWorkUnit {
     
-    private static final int MAX_DESC_LENGTH = 1024;
+    public static final int MAX_DESC_LENGTH = 1024;
     private static final String GEN_NAME = "request_sequence";
     
     @Id

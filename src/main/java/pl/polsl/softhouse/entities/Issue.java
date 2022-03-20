@@ -15,7 +15,7 @@ import javax.persistence.SequenceGenerator;
 @Entity
 public class Issue extends AbstractWorkUnit {
     
-    private static final int MAX_DESC_LENGTH = 512;
+    public static final int MAX_DESC_LENGTH = 512;
     private static final String GEN_NAME = "issue_sequence";
 
     @Id

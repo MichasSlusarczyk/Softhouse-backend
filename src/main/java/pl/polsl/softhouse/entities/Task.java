@@ -12,7 +12,7 @@ import javax.persistence.SequenceGenerator;
 @Entity
 public class Task extends AbstractWorkUnit {
     
-    private static final int MAX_NAME_LENGTH = 128;
+    public static final int MAX_NAME_LENGTH = 128;
     private static final String GEN_NAME = "task_sequence";
 
     @Id

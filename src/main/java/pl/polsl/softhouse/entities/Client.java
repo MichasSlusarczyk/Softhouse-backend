@@ -13,7 +13,7 @@ import javax.persistence.SequenceGenerator;
 @Entity
 public class Client {
     
-    private static final int MAX_NAME_LENGTH = 256;
+    public static final int MAX_NAME_LENGTH = 256;
     private static final String GEN_NAME = "client_sequence";
 
     @Id
