@@ -1,20 +1,19 @@
 package pl.polsl.softhouse.entities;
 
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
 @Entity
-public class Client {
+public class Task extends AbstractWorkUnit {
     
-    private static final int MAX_NAME_LENGTH = 256;
-    private static final String GEN_NAME = "client_sequence";
+    private static final int MAX_NAME_LENGTH = 128;
+    private static final String GEN_NAME = "task_sequence";
 
     @Id
     @SequenceGenerator(name=GEN_NAME, allocationSize=1)
@@ -24,8 +23,13 @@ public class Client {
     @Column(nullable = false, length = MAX_NAME_LENGTH)
     private String name;
 
-    @OneToMany(mappedBy = "client")
-    private List<SystemClient> systemAssoc;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "issue_id", nullable = false)
+    private Issue issue;
+
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "user_id", nullable = true)
+    private User worker;
 
     public Long getId() {
         return id;
@@ -43,11 +47,19 @@ public class Client {
         this.name = name;
     }
 
-    public List<SystemClient> getSystemAssoc() {
-        return systemAssoc;
+    public Issue getIssue() {
+        return issue;
     }
 
-    public void setSystemAssoc(List<SystemClient> systemAssoc) {
-        this.systemAssoc = systemAssoc;
+    public void setIssue(Issue issue) {
+        this.issue = issue;
+    }
+
+    public User getWorker() {
+        return worker;
+    }
+
+    public void setWorker(User worker) {
+        this.worker = worker;
     }
 }

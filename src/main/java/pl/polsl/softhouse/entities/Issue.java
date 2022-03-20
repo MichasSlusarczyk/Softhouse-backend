@@ -13,11 +13,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
 @Entity
-public class Request extends AbstractWorkUnit {
+public class Issue extends AbstractWorkUnit {
     
-    private static final int MAX_DESC_LENGTH = 1024;
-    private static final String GEN_NAME = "request_sequence";
-    
+    private static final int MAX_DESC_LENGTH = 512;
+    private static final String GEN_NAME = "issue_sequence";
+
     @Id
     @SequenceGenerator(name=GEN_NAME, allocationSize=1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator=GEN_NAME)
@@ -28,10 +28,14 @@ public class Request extends AbstractWorkUnit {
 
     @ManyToOne(optional = true)
     @JoinColumn(name = "user_id", nullable = true)
-    private User accountManager;
+    private User productManager;
 
-    @OneToMany(mappedBy = "request")
-    private List<Issue> issues;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "request_id", nullable = false)
+    private Request request;
+
+    @OneToMany(mappedBy = "issue")
+    private List<Task> tasks;
 
     public Long getId() {
         return id;
@@ -49,11 +53,27 @@ public class Request extends AbstractWorkUnit {
         this.description = description;
     }
 
-    public User getAccountManager() {
-        return accountManager;
+    public User getProductManager() {
+        return productManager;
     }
 
-    public void setAccountManager(User accountManager) {
-        this.accountManager = accountManager;
+    public void setProductManager(User productManager) {
+        this.productManager = productManager;
+    }
+
+    public Request getRequest() {
+        return request;
+    }
+
+    public void setRequest(Request request) {
+        this.request = request;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 }

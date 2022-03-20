@@ -11,10 +11,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
 @Entity
-public class Client {
+public class System {
     
     private static final int MAX_NAME_LENGTH = 256;
-    private static final String GEN_NAME = "client_sequence";
+    private static final String GEN_NAME = "system_sequence";
 
     @Id
     @SequenceGenerator(name=GEN_NAME, allocationSize=1)
@@ -24,8 +24,8 @@ public class Client {
     @Column(nullable = false, length = MAX_NAME_LENGTH)
     private String name;
 
-    @OneToMany(mappedBy = "client")
-    private List<SystemClient> systemAssoc;
+    @OneToMany(mappedBy = "system")
+    private List<SystemClient> clientAssoc;
 
     public Long getId() {
         return id;
@@ -43,11 +43,11 @@ public class Client {
         this.name = name;
     }
 
-    public List<SystemClient> getSystemAssoc() {
-        return systemAssoc;
+    public List<SystemClient> getClientAssoc() {
+        return clientAssoc;
     }
 
-    public void setSystemAssoc(List<SystemClient> systemAssoc) {
-        this.systemAssoc = systemAssoc;
+    public void setClientAssoc(List<SystemClient> clientAssoc) {
+        this.clientAssoc = clientAssoc;
     }
 }
