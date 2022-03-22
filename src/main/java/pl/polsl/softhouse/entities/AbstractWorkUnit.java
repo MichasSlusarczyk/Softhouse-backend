@@ -1,6 +1,6 @@
 package pl.polsl.softhouse.entities;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.EnumType;
@@ -9,31 +9,31 @@ import javax.persistence.MappedSuperclass;
 
 import pl.polsl.softhouse.entities.enums.IssueType;
 import pl.polsl.softhouse.entities.enums.WorkPriority;
-import pl.polsl.softhouse.entities.enums.WorkResult;
 import pl.polsl.softhouse.entities.enums.WorkStatus;
 
 @MappedSuperclass
 public abstract class AbstractWorkUnit {
     
+    public static final int RESULT_LENGTH = 512;
+
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     protected WorkStatus status = WorkStatus.OPEN;
 
-    @Enumerated(EnumType.ORDINAL)
-    @Column(nullable = true)
-    protected WorkResult result;
+    @Column(nullable = false, length = RESULT_LENGTH)
+    protected String result;
 
     @Column(nullable = false)
-    protected LocalDate dateOpened;
+    protected LocalDateTime dateOpened = LocalDateTime.now();
 
     @Column(nullable = true)
-    protected LocalDate dateInProgress;
+    protected LocalDateTime dateInProgress;
 
     @Column(nullable = true)
-    protected LocalDate dateFinished;
+    protected LocalDateTime dateClosed;
 
     @Column(nullable = true)
-    protected LocalDate deadline;
+    protected LocalDateTime deadline;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
@@ -51,43 +51,43 @@ public abstract class AbstractWorkUnit {
         this.status = status;
     }
 
-    public WorkResult getResult() {
+    public String getResult() {
         return result;
     }
 
-    public void setResult(WorkResult result) {
+    public void setResult(String result) {
         this.result = result;
     }
 
-    public LocalDate getDateOpened() {
+    public LocalDateTime getDateOpened() {
         return dateOpened;
     }
 
-    public void setDateOpened(LocalDate dateOpened) {
+    public void setDateOpened(LocalDateTime dateOpened) {
         this.dateOpened = dateOpened;
     }
 
-    public LocalDate getDateInProgress() {
+    public LocalDateTime getDateInProgress() {
         return dateInProgress;
     }
 
-    public void setDateInProgress(LocalDate dateInProgress) {
+    public void setDateInProgress(LocalDateTime dateInProgress) {
         this.dateInProgress = dateInProgress;
     }
 
-    public LocalDate getDateFinished() {
-        return dateFinished;
+    public LocalDateTime getDateFinished() {
+        return dateClosed;
     }
 
-    public void setDateFinished(LocalDate dateFinished) {
-        this.dateFinished = dateFinished;
+    public void setDateFinished(LocalDateTime dateFinished) {
+        this.dateClosed = dateFinished;
     }
 
-    public LocalDate getDeadline() {
+    public LocalDateTime getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(LocalDate deadline) {
+    public void setDeadline(LocalDateTime deadline) {
         this.deadline = deadline;
     }
 

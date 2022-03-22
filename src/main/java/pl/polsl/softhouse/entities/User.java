@@ -34,7 +34,7 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    private boolean active = true;
+    private Boolean active = true;
 
     @Column(nullable = false, length = MAX_NAME_LENGTH)
     private String firstName;
@@ -76,11 +76,11 @@ public class User {
         this.password = password;
     }
 
-    public boolean isActive() {
+    public Boolean isActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 

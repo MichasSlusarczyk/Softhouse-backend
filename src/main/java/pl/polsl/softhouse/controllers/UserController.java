@@ -2,7 +2,6 @@ package pl.polsl.softhouse.controllers;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,17 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import pl.polsl.softhouse.dto.user.UserDto;
 import pl.polsl.softhouse.entities.User;
 import pl.polsl.softhouse.services.UserService;
 
 @CrossOrigin
 @RestController
-@RequestMapping(path = "api/user")
+@RequestMapping(path = "api/users")
 public class UserController {
 
     private final UserService userService;
 
-    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -40,8 +39,8 @@ public class UserController {
     }
 
     @PostMapping
-    public void addUser(@RequestBody User user) {
-        userService.addUser(user);
+    public User addUser(@RequestBody UserDto userDto) {
+        return userService.addUser(userDto);
     }
 
     @DeleteMapping(path = "{id}")
@@ -51,14 +50,8 @@ public class UserController {
 
     // TODO: A lot of parameters, probably not good.
     @PutMapping(path = "{id}")
-    public void updateUser(@PathVariable Long id,
-            @RequestParam(required = false) String username,
-            @RequestParam(required = false) String firstName,
-            @RequestParam(required = false) String lastName,
-            @RequestParam(required = false) String password,
-            @RequestParam(required = false) Boolean active) {
-
-        userService.updateUser(id, firstName, lastName, username, password, active);
+    public void updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
+        userService.updateUser(id, userDto);
     }
 
     @GetMapping(path = "username/{username}")
