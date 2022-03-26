@@ -1,7 +1,7 @@
 package pl.polsl.softhouse.controllers;
 
-import java.util.List;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import pl.polsl.softhouse.dto.user.UserAuthDto;
 import pl.polsl.softhouse.dto.user.UserDto;
-import pl.polsl.softhouse.entities.User;
+import pl.polsl.softhouse.dto.user.UserInfoDto;
+import pl.polsl.softhouse.exceptions.user.UserAlreadyExistsException;
+import pl.polsl.softhouse.exceptions.user.UserNotFoundException;
 import pl.polsl.softhouse.services.UserService;
 
 @CrossOrigin
@@ -29,34 +31,58 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAll() {
-        return userService.getUsers();
+    public ResponseEntity getAll() {
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
     @GetMapping(path = "{id}")
-    public User getUserById(@PathVariable Long id) {
-        return userService.getUserById(id);
+    public ResponseEntity getUserById(@PathVariable Long id) {
+        try {
+            UserInfoDto userDto = userService.getUserById(id);
+            return new ResponseEntity<>(userDto, HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping
-    public User addUser(@RequestBody UserDto userDto) {
-        return userService.addUser(userDto);
+    public ResponseEntity addUser(@RequestBody UserDto userDto) {
+        try {
+            userService.addUser(userDto);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (UserAlreadyExistsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping(path = "{id}")
-    public void deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    public ResponseEntity deleteUser(@PathVariable Long id) {
+        try {
+            userService.deleteUser(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
-    // TODO: A lot of parameters, probably not good.
     @PutMapping(path = "{id}")
-    public void updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
-        userService.updateUser(id, userDto);
+    public ResponseEntity updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
+        try {
+            userService.updateUser(id, userDto);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(path = "username/{username}")
-    public User getUserByUsername(@PathVariable String username) {
-        return userService.getUserByUsername(username);
+    public ResponseEntity getUserByUsername(@PathVariable String username) {
+        try {
+            UserAuthDto userDto = userService.getUserAuthByUsername(username);
+            return new ResponseEntity<>(userDto, HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
 }

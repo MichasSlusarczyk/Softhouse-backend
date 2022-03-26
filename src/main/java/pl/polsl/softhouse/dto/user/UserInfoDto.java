@@ -1,9 +1,8 @@
 package pl.polsl.softhouse.dto.user;
 
-public class UserDto {
+public class UserInfoDto {
     private Long id;
     private String username;
-    private String password;
     private Boolean active = true;
     private String firstName;
     private String lastName;
@@ -25,14 +24,6 @@ public class UserDto {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public Boolean getActive() {

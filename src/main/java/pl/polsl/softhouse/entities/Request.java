@@ -2,17 +2,10 @@ package pl.polsl.softhouse.entities;
 
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "requests")
 public class Request extends AbstractWorkUnit {
     
     public static final int MAX_DESC_LENGTH = 1024;
@@ -28,7 +21,7 @@ public class Request extends AbstractWorkUnit {
 
     @ManyToOne(optional = true)
     @JoinColumn(name = "user_id", nullable = true)
-    private User accountManager;
+    private UserEntity accountManager;
 
     @OneToMany(mappedBy = "request")
     private List<Issue> issues;
@@ -49,11 +42,11 @@ public class Request extends AbstractWorkUnit {
         this.description = description;
     }
 
-    public User getAccountManager() {
+    public UserEntity getAccountManager() {
         return accountManager;
     }
 
-    public void setAccountManager(User accountManager) {
+    public void setAccountManager(UserEntity accountManager) {
         this.accountManager = accountManager;
     }
 }

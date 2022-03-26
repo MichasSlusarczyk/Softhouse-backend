@@ -9,4 +9,8 @@ public class UserAlreadyExistsException extends RuntimeException {
     public UserAlreadyExistsException(String reason) {
         super(reason);
     }
+
+    public static UserAlreadyExistsException fromUsername(String username) {
+        return new UserAlreadyExistsException("User \"" + username + "\" already exist.");
+    }
 }

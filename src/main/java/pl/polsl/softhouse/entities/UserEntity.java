@@ -14,8 +14,8 @@ import javax.persistence.UniqueConstraint;
 import pl.polsl.softhouse.entities.enums.UserRole;
 
 @Entity
-@Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }) })
-public class User {
+@Table(name="users", uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }) })
+public class UserEntity {
 
     private static final String GEN_NAME = "user_sequence";
     public static final int MAX_USERNAME_LENGTH = 64;
@@ -51,6 +51,48 @@ public class User {
 
     @Column(nullable = false, length = 9)
     private String telNum;
+
+    public UserEntity(Long id,
+                      String username,
+                      String password,
+                      Boolean active,
+                      String firstName,
+                      String lastName,
+                      UserRole role,
+                      String email,
+                      String telNum) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.active = active;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+        this.email = email;
+        this.telNum = telNum;
+    }
+
+    public UserEntity() {
+    }
+
+    public UserEntity(String username,
+                      String password,
+                      Boolean active,
+                      String firstName,
+                      String lastName,
+                      UserRole role,
+                      String email,
+                      String telNum) {
+        this.id = 0L;
+        this.username = username;
+        this.password = password;
+        this.active = active;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+        this.email = email;
+        this.telNum = telNum;
+    }
 
     public Long getId() {
         return id;

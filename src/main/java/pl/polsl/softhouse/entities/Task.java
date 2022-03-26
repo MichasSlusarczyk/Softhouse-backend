@@ -1,15 +1,9 @@
 package pl.polsl.softhouse.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "tasks")
 public class Task extends AbstractWorkUnit {
     
     public static final int MAX_NAME_LENGTH = 128;
@@ -29,7 +23,7 @@ public class Task extends AbstractWorkUnit {
 
     @ManyToOne(optional = true)
     @JoinColumn(name = "user_id", nullable = true)
-    private User worker;
+    private UserEntity worker;
 
     public Long getId() {
         return id;
@@ -55,11 +49,11 @@ public class Task extends AbstractWorkUnit {
         this.issue = issue;
     }
 
-    public User getWorker() {
+    public UserEntity getWorker() {
         return worker;
     }
 
-    public void setWorker(User worker) {
+    public void setWorker(UserEntity worker) {
         this.worker = worker;
     }
 }
