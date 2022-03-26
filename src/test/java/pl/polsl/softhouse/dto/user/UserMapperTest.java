@@ -34,7 +34,7 @@ public class UserMapperTest {
         assertEquals(user.getEmail(), userInfoDto.getEmail());
         assertEquals(user.getTelNum(), userInfoDto.getTelNum());
         assertEquals(user.getRole().toString(), userInfoDto.getRole());
-        assertEquals(user.isActive(), userInfoDto.getActive());
+        assertEquals(user.getActive(), userInfoDto.getActive());
     }
 
     @Test
@@ -63,7 +63,7 @@ public class UserMapperTest {
         assertEquals(userDto.getEmail(), user.getEmail());
         assertEquals(userDto.getTelNum(), user.getTelNum());
         assertEquals(userDto.getRole(), user.getRole().toString());
-        assertEquals(true, user.isActive());
+        assertEquals(true, user.getActive());
     }
 
     @Test
@@ -92,7 +92,7 @@ public class UserMapperTest {
         assertEquals(userDto.getEmail(), user.getEmail());
         assertEquals(userDto.getTelNum(), user.getTelNum());
         assertEquals(userDto.getRole(), user.getRole().toString());
-        assertEquals(true, user.isActive());
+        assertEquals(true, user.getActive());
     }
 
     @Test
@@ -126,7 +126,7 @@ public class UserMapperTest {
         assertEquals(user.getEmail(), updatedUser.getEmail());
         assertEquals(user.getTelNum(), updatedUser.getTelNum());
         assertEquals(userDto.getRole(), updatedUser.getRole().toString());
-        assertEquals(user.isActive(), updatedUser.isActive());
+        assertEquals(user.getActive(), updatedUser.getActive());
     }
 
     @Test
@@ -150,6 +150,6 @@ public class UserMapperTest {
         assertEquals(user.getId(), userDto.getId());
         assertEquals(user.getUsername(), userDto.getUsername());
         assertEquals(user.getPassword(), userDto.getPassword());
-        assertEquals(user.isActive(), userDto.getActive());
+        assertEquals(user.getActive(), userDto.getActive());
     }
 }

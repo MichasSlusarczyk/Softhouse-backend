@@ -10,6 +10,10 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import pl.polsl.softhouse.entities.enums.UserRole;
 
@@ -25,31 +29,50 @@ public class UserEntity {
     @Id
     @SequenceGenerator(name = GEN_NAME, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = GEN_NAME)
+    @NotNull
     private Long id;
 
     @Column(nullable = false, length = MAX_USERNAME_LENGTH)
+    @NotNull
+    @Size(min = 4, max = MAX_USERNAME_LENGTH,
+            message = "Username must be between 4 and " + MAX_USERNAME_LENGTH + " characters")
     private String username;
 
     @Column(nullable = false, length = 64)
+    @NotNull()
+    //@Size(min = 64, max = 64, message = "password hash must be 64 characters long") // Uncomment this when hashing is implemented.
     private String password;
 
     @Column(nullable = false)
+    @NotNull
     private Boolean active = true;
 
     @Column(nullable = false, length = MAX_NAME_LENGTH)
+    @NotNull
+    @Size(min = 1, max = MAX_NAME_LENGTH,
+            message = "First name must be between 1 and " + MAX_USERNAME_LENGTH + " characters")
     private String firstName;
 
     @Column(nullable = false, length = MAX_NAME_LENGTH)
+    @NotNull
+    @Size(min = 1, max = MAX_NAME_LENGTH,
+            message = "Last name must be between 1 and " + MAX_USERNAME_LENGTH + " characters")
     private String lastName;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
+    @NotNull
     private UserRole role;
 
     @Column(nullable = false, length = MAX_EMAIL_LENGTH)
+    @NotNull
+    @Email(message = "Must be a valid email")
     private String email;
 
     @Column(nullable = false, length = 9)
+    @NotNull
+    @Pattern(regexp = "\\d{9}",
+                message = "Must be a valid 9-digit number")
     private String telNum;
 
     public UserEntity(Long id,
@@ -118,7 +141,7 @@ public class UserEntity {
         this.password = password;
     }
 
-    public Boolean isActive() {
+    public Boolean getActive() {
         return active;
     }
 

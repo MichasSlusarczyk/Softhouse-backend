@@ -2,22 +2,18 @@ package pl.polsl.softhouse.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import pl.polsl.softhouse.dto.user.UserAuthDto;
 import pl.polsl.softhouse.dto.user.UserDto;
 import pl.polsl.softhouse.dto.user.UserInfoDto;
-import pl.polsl.softhouse.exceptions.user.UserAlreadyExistsException;
-import pl.polsl.softhouse.exceptions.user.UserNotFoundException;
+import pl.polsl.softhouse.exceptions.InvalidDataException;
+import pl.polsl.softhouse.exceptions.user.UserException;
 import pl.polsl.softhouse.services.UserService;
+
+import javax.validation.ConstraintViolationException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -31,58 +27,56 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity getAll() {
-        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+    public ResponseEntity<List<UserInfoDto>> getAll() {
+        return ResponseEntity.ok().body(userService.getAllUsers());
     }
 
     @GetMapping(path = "{id}")
-    public ResponseEntity getUserById(@PathVariable Long id) {
-        try {
-            UserInfoDto userDto = userService.getUserById(id);
-            return new ResponseEntity<>(userDto, HttpStatus.OK);
-        } catch (UserNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<UserInfoDto> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok().body(userService.getUserById(id));
     }
 
     @PostMapping
-    public ResponseEntity addUser(@RequestBody UserDto userDto) {
-        try {
-            userService.addUser(userDto);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (UserAlreadyExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Void> addUser(@RequestBody UserDto userDto) {
+        userService.addUser(userDto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping(path = "{id}")
-    public ResponseEntity deleteUser(@PathVariable Long id) {
-        try {
-            userService.deleteUser(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (UserNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping(path = "{id}")
-    public ResponseEntity updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
-        try {
-            userService.updateUser(id, userDto);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (UserNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Void> updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
+        userService.updateUser(id, userDto);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping(path = "username/{username}")
-    public ResponseEntity getUserByUsername(@PathVariable String username) {
-        try {
-            UserAuthDto userDto = userService.getUserAuthByUsername(username);
-            return new ResponseEntity<>(userDto, HttpStatus.OK);
-        } catch (UserNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<UserAuthDto> getUserByUsername(@PathVariable String username) {
+        return ResponseEntity.ok().body(userService.getUserAuthByUsername(username));
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Map<String, String>> handleConstraintViolationExceptions(ConstraintViolationException e) {
+        Map<String, String> errors = new HashMap<>();
+        e.getConstraintViolations()
+                .forEach((violation) -> errors.put(
+                        violation.getPropertyPath().toString(),
+                        violation.getMessage()));
+
+        return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(UserException.class)
+    public ResponseEntity<String> handleUserExceptions(UserException e) {
+        return new ResponseEntity<>(e.getMessage(), e.getStatusCode());
+    }
+
+    @ExceptionHandler(InvalidDataException.class)
+    public ResponseEntity<String> handleInvalidDataException(InvalidDataException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
 }
