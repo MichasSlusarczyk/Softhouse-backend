@@ -1,18 +1,10 @@
 package pl.polsl.softhouse.entities;
 
+import javax.persistence.*;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-
 @Entity
+@Table(name = "issues")
 public class Issue extends AbstractWorkUnit {
     
     public static final int MAX_DESC_LENGTH = 512;
@@ -28,7 +20,7 @@ public class Issue extends AbstractWorkUnit {
 
     @ManyToOne(optional = true)
     @JoinColumn(name = "user_id", nullable = true)
-    private User productManager;
+    private UserEntity productManager;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "request_id", nullable = false)
@@ -53,11 +45,11 @@ public class Issue extends AbstractWorkUnit {
         this.description = description;
     }
 
-    public User getProductManager() {
+    public UserEntity getProductManager() {
         return productManager;
     }
 
-    public void setProductManager(User productManager) {
+    public void setProductManager(UserEntity productManager) {
         this.productManager = productManager;
     }
 

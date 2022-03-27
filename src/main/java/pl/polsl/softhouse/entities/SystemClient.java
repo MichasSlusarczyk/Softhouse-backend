@@ -1,20 +1,16 @@
 package pl.polsl.softhouse.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "system_client")
 @IdClass(SystemClientId.class)
 public class SystemClient {
 
     @Id
     @ManyToOne
     @JoinColumn(name = "system_id")
-    private System system;
+    private SystemEntity system;
 
     @Id
     @ManyToOne
@@ -24,11 +20,11 @@ public class SystemClient {
     @Column(nullable = false, length = 8)
     private String version;
 
-    public System getSystem() {
+    public SystemEntity getSystem() {
         return system;
     }
 
-    public void setSystem(System system) {
+    public void setSystem(SystemEntity system) {
         this.system = system;
     }
 

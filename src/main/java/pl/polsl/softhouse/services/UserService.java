@@ -1,98 +1,113 @@
 package pl.polsl.softhouse.services;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import pl.polsl.softhouse.entities.User;
+import pl.polsl.softhouse.dto.user.UserAuthDto;
+import pl.polsl.softhouse.dto.user.UserDto;
+import pl.polsl.softhouse.dto.user.UserInfoDto;
+import pl.polsl.softhouse.dto.user.UserMapper;
+import pl.polsl.softhouse.entities.UserEntity;
+import pl.polsl.softhouse.exceptions.InvalidDataException;
 import pl.polsl.softhouse.exceptions.user.UserAlreadyExistsException;
 import pl.polsl.softhouse.exceptions.user.UserNotFoundException;
 import pl.polsl.softhouse.repositories.UserRepository;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final Validator validator;
 
-    @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, Validator validator) {
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
+        this.validator = validator;
     }
 
-    public List<User> getUsers() {
-        return userRepository.findAll();
+    public List<UserInfoDto> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::userToInfoDto)
+                .collect(Collectors.toList());
     }
 
-    public User getUserById(Long id) {
-        return userRepository.findById(id).get();
-    }
-
-    public User addUser(User user) {
-        if (!checkUsernameUnique(user.getUsername())) {
-            throw new UserAlreadyExistsException("User already exists."); // TODO
+    public UserInfoDto getUserById(Long id) {
+        if (id == null) {
+            throw new InvalidDataException("No ID provided.");
         }
-        
-        user.setId(0L);
-        user.setActive(true);
 
-        return userRepository.save(user);
+        return userRepository.findById(id)
+                .map(userMapper::userToInfoDto)
+                .orElseThrow(() -> new UserNotFoundException(id));
+    }
+
+    public void addUser(UserDto userDto) {
+        if (userDto == null) {
+            throw new InvalidDataException("No data sent.");
+        }
+
+        if (!checkIfUsernameUnique(userDto.getUsername())) {
+            throw UserAlreadyExistsException.fromUsername(userDto.getUsername());
+        }
+
+        UserEntity user = userMapper.createUserFromDto(userDto);
+        validateOrThrow(user);
+
+        userRepository.save(user);
     }
 
     public void deleteUser(Long id) {
+        if (id == null) {
+            throw new InvalidDataException("No ID provided.");
+        }
+
         if (!userRepository.existsById(id)) {
-            throw new UserNotFoundException("User does not exist."); // TODO
+            throw new UserNotFoundException(id);
         }
 
         userRepository.deleteById(id);
     }
 
-    // TODO: A lot of parameters, probably not good.
-    public User updateUser(Long id, String firstName, String lastName, String username, String password, Boolean active) {
-        Optional<User> foundUser = userRepository.findById(id);
-        if (foundUser.isEmpty()) {
-            throw new UserNotFoundException("User does not exist.");
-        }
-        User user = foundUser.get();
-
-        if (username != null && !username.isBlank() && !username.equals(user.getUsername())) {
-            if (!checkUsernameUnique(username)) {
-                throw new UserAlreadyExistsException("User already exists."); // TODO
-            }
-            user.setUsername(username);
+    public void updateUser(Long id, UserDto userDto) {
+        if (id == null || userDto == null) {
+            throw new InvalidDataException("No data sent.");
         }
 
-        if (firstName != null && !firstName.isBlank() && !firstName.equals(user.getFirstName())) {
-            user.setFirstName(firstName);
-        }
+        UserEntity user = userRepository.findById(id)
+                .map(foundUser -> userMapper.updateUser(userDto, foundUser))
+                .orElseThrow(() -> new UserNotFoundException(id));
+        validateOrThrow(user);
 
-        if (lastName != null && !lastName.isBlank() && !lastName.equals(user.getLastName())) {
-            user.setLastName(password);
-        }
-
-        if (password != null && !password.isBlank() && !password.equals(user.getPassword())) {
-            user.setPassword(password);
-        }
-
-        if (active != null && active != user.isActive()) {
-            user.setActive(active);
-        }
-
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
-    public User getUserByUsername(String username) {
-        Optional<User> foundUser = userRepository.findByUsername(username);
-        if (foundUser.isEmpty()) {
-            throw new UserNotFoundException("User does not exist.");
+    public UserAuthDto getUserAuthByUsername(String username) {
+        if (username == null) {
+            throw new InvalidDataException("No data sent.");
         }
 
-        return foundUser.get();
+        return userRepository.findByUsername(username)
+                .map(userMapper::userToAuthDto)
+                .orElseThrow(() -> UserNotFoundException.fromUsername(username));
     }
 
-    private boolean checkUsernameUnique(String username) {
-        Optional<User> foundUser = userRepository.findByUsername(username);
-        return foundUser.isEmpty();
+    private void validateOrThrow(UserEntity user) {
+        Set<ConstraintViolation<UserEntity>> violations = validator.validate(user);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+    }
+
+    private boolean checkIfUsernameUnique(String username) {
+        return userRepository.findByUsername(username).isEmpty();
     }
 }
