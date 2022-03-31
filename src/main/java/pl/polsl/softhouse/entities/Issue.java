@@ -1,5 +1,7 @@
 package pl.polsl.softhouse.entities;
 
+import pl.polsl.softhouse.entities.enums.IssueType;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -17,6 +19,10 @@ public class Issue extends AbstractWorkUnit {
 
     @Column(nullable = false, length = MAX_DESC_LENGTH)
     private String description;
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(nullable = false)
+    private IssueType type;
 
     @ManyToOne(optional = true)
     @JoinColumn(name = "user_id", nullable = true)
@@ -68,4 +74,10 @@ public class Issue extends AbstractWorkUnit {
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
     }
+
+    public IssueType getType() {
+        return type;
+    }
+
+    public void setType(IssueType type) { this.type = type; }
 }

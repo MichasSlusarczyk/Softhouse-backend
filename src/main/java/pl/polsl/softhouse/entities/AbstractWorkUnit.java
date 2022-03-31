@@ -7,7 +7,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
 
-import pl.polsl.softhouse.entities.enums.IssueType;
 import pl.polsl.softhouse.entities.enums.WorkPriority;
 import pl.polsl.softhouse.entities.enums.WorkStatus;
 
@@ -38,10 +37,6 @@ public abstract class AbstractWorkUnit {
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     protected WorkPriority priority = WorkPriority.NORMAL;
-
-    @Enumerated(EnumType.ORDINAL)
-    @Column(nullable = false)
-    protected IssueType type;
 
     public WorkStatus getStatus() {
         return status;
@@ -75,12 +70,12 @@ public abstract class AbstractWorkUnit {
         this.dateInProgress = dateInProgress;
     }
 
-    public LocalDateTime getDateFinished() {
+    public LocalDateTime getDateClosed() {
         return dateClosed;
     }
 
-    public void setDateFinished(LocalDateTime dateFinished) {
-        this.dateClosed = dateFinished;
+    public void setDateClosed(LocalDateTime dateClosed) {
+        this.dateClosed = dateClosed;
     }
 
     public LocalDateTime getDeadline() {
@@ -97,13 +92,5 @@ public abstract class AbstractWorkUnit {
 
     public void setPriority(WorkPriority priority) {
         this.priority = priority;
-    }
-
-    public IssueType getType() {
-        return type;
-    }
-
-    public void setType(IssueType type) {
-        this.type = type;
     }
 }
