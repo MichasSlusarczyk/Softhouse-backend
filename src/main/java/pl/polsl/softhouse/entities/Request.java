@@ -24,8 +24,9 @@ public class Request extends AbstractWorkUnit {
     @Size(max = MAX_DESC_LENGTH)
     private String description = "";
 
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "user_id", nullable = true)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    @NotNull
     private UserEntity accountManager;
 
     @OneToMany(mappedBy = "request")

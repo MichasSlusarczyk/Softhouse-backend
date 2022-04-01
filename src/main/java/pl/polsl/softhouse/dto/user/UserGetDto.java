@@ -1,6 +1,6 @@
 package pl.polsl.softhouse.dto.user;
 
-public class UserDto extends UserAuthDto {
+public class UserGetDto extends BaseUserDto {
 
     private String firstName;
     private String lastName;

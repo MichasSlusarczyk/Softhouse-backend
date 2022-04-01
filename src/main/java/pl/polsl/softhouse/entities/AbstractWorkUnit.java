@@ -47,11 +47,6 @@ public abstract class AbstractWorkUnit {
     @NotNull
     protected WorkPriority priority = WorkPriority.NORMAL;
 
-    @Enumerated(EnumType.ORDINAL)
-    @Column(nullable = false)
-    @NotNull
-    protected IssueType type;
-
     public WorkStatus getStatus() {
         return status;
     }
@@ -106,13 +101,5 @@ public abstract class AbstractWorkUnit {
 
     public void setPriority(WorkPriority priority) {
         this.priority = priority;
-    }
-
-    public IssueType getType() {
-        return type;
-    }
-
-    public void setType(IssueType type) {
-        this.type = type;
     }
 }

@@ -1,10 +1,12 @@
 package pl.polsl.softhouse.dto.user;
 
-public class UserInfoDto extends BaseUserDto {
+import pl.polsl.softhouse.entities.enums.UserRole;
+
+public class UserPostDto extends UserAuthDto {
 
     private String firstName;
     private String lastName;
-    private String role;
+    private UserRole role;
     private String email;
     private String telNum;
 
@@ -24,11 +26,11 @@ public class UserInfoDto extends BaseUserDto {
         this.lastName = lastName;
     }
 
-    public String getRole() {
+    public UserRole getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(UserRole role) {
         this.role = role;
     }
 

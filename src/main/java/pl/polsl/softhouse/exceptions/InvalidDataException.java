@@ -7,7 +7,7 @@ import pl.polsl.softhouse.exceptions.user.UserException;
 @ResponseStatus(code = HttpStatus.BAD_REQUEST)
 public class InvalidDataException extends RuntimeException {
 
-    public InvalidDataException(String reason) {
-        super(reason);
+    public InvalidDataException(String message) {
+        super(message);
     }
 }

@@ -8,8 +8,8 @@ import javax.validation.ValidationException;
 @ResponseStatus(code = HttpStatus.NOT_FOUND)
 public class UserNotFoundException extends UserException {
     
-    public UserNotFoundException(String reason) {
-        super(HttpStatus.NOT_FOUND, reason);
+    public UserNotFoundException(String message) {
+        super(HttpStatus.NOT_FOUND, message);
     }
 
     public UserNotFoundException(long id) {

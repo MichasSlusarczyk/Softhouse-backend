@@ -1,16 +1,17 @@
 package pl.polsl.softhouse.controllers;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.polsl.softhouse.dto.user.UserAuthDto;
-import pl.polsl.softhouse.dto.user.UserDto;
-import pl.polsl.softhouse.dto.user.UserInfoDto;
+import pl.polsl.softhouse.dto.user.UserPostDto;
+import pl.polsl.softhouse.dto.user.UserGetDto;
 import pl.polsl.softhouse.exceptions.InvalidDataException;
 import pl.polsl.softhouse.exceptions.user.UserException;
 import pl.polsl.softhouse.services.UserService;
 
 import javax.validation.ConstraintViolationException;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,19 +28,24 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserInfoDto>> getAll() {
+    public ResponseEntity<List<UserGetDto>> getAll() {
         return ResponseEntity.ok().body(userService.getAllUsers());
     }
 
     @GetMapping(path = "{id}")
-    public ResponseEntity<UserInfoDto> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserGetDto> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok().body(userService.getUserById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Void> addUser(@RequestBody UserDto userDto) {
-        userService.addUser(userDto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<URI> addUser(@RequestBody UserPostDto userDto) {
+        long userId = userService.addUser(userDto);
+        URI createdUri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(userId)
+                .toUri();
+
+        return ResponseEntity.created(createdUri).build();
     }
 
     @DeleteMapping(path = "{id}")
@@ -49,7 +55,7 @@ public class UserController {
     }
 
     @PutMapping(path = "{id}")
-    public ResponseEntity<Void> updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
+    public ResponseEntity<Void> updateUser(@PathVariable Long id, @RequestBody UserPostDto userDto) {
         userService.updateUser(id, userDto);
         return ResponseEntity.ok().build();
     }
