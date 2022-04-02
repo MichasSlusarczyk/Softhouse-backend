@@ -3,6 +3,8 @@ package pl.polsl.softhouse.entities;
 import pl.polsl.softhouse.entities.enums.IssueType;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -18,6 +20,8 @@ public class Issue extends AbstractWorkUnit {
     private Long id;
 
     @Column(nullable = false, length = MAX_DESC_LENGTH)
+    @NotNull
+    @Size(max = MAX_DESC_LENGTH)
     private String description;
 
     @Enumerated(EnumType.ORDINAL)
@@ -30,6 +34,7 @@ public class Issue extends AbstractWorkUnit {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "request_id", nullable = false)
+    @NotNull
     private Request request;
 
     @OneToMany(mappedBy = "issue")

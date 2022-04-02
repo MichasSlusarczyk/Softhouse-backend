@@ -3,8 +3,8 @@ package pl.polsl.softhouse.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.polsl.softhouse.dto.issue.IssueClosedDto;
 import pl.polsl.softhouse.dto.issue.IssueDto;
+import pl.polsl.softhouse.dto.issue.IssuePostDto;
 import pl.polsl.softhouse.entities.Issue;
 import pl.polsl.softhouse.services.IssueService;
 
@@ -30,20 +30,14 @@ public class IssueController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addIssue(@RequestBody Issue issue) {
-        issueService.addIssue(issue);
+    public ResponseEntity<Void> addIssue(@RequestBody IssuePostDto issuePostDto) {
+        issueService.addIssue(issuePostDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping(path = "{id}")
     public ResponseEntity<Void> updateIssue(@PathVariable Long id, @RequestBody IssueDto issueDto) {
         issueService.updateIssue(id, issueDto);
-        return ResponseEntity.ok().build();
-    }
-
-    @PutMapping(path = "closed/{id}")
-    public ResponseEntity<Void> updateClosedIssue(@PathVariable Long id, @RequestBody IssueClosedDto issueClosedDto) {
-        issueService.updateClosedIssue(id, issueClosedDto);
         return ResponseEntity.ok().build();
     }
 

@@ -1,35 +1,23 @@
 package pl.polsl.softhouse.dto.issue;
 
-import pl.polsl.softhouse.entities.Task;
 import pl.polsl.softhouse.entities.enums.IssueType;
 import pl.polsl.softhouse.entities.enums.WorkPriority;
 import pl.polsl.softhouse.entities.enums.WorkStatus;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-public class IssueDto {
-    private Long id;
-    private WorkStatus status;
-    private String result;
-    private LocalDateTime dateOpened;
+public class IssuePostDto {
+    private WorkStatus status = WorkStatus.OPEN;
+    private LocalDateTime dateOpen = LocalDateTime.now();
     private LocalDateTime dateInProgress;
     private LocalDateTime dateClosed;
     private LocalDateTime deadline;
-    private WorkPriority priority;
-    private Long productManagerId;
-    private List<Task> tasks; //TODO
-    private String description;
-    private IssueType type;
+    private WorkPriority priority = WorkPriority.NORMAL;
+    private String result = "";
+    private String description = "";
+    private IssueType type = IssueType.FEATURE;
     private Long requestId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private Long productManagerId;
 
     public WorkStatus getStatus() {
         return status;
@@ -39,20 +27,12 @@ public class IssueDto {
         this.status = status;
     }
 
-    public String getResult() {
-        return result;
+    public LocalDateTime getDateOpen() {
+        return dateOpen;
     }
 
-    public void setResult(String result) {
-        this.result = result;
-    }
-
-    public LocalDateTime getDateOpened() {
-        return dateOpened;
-    }
-
-    public void setDateOpened(LocalDateTime dateOpened) {
-        this.dateOpened = dateOpened;
+    public void setDateOpen(LocalDateTime dateOpen) {
+        this.dateOpen = dateOpen;
     }
 
     public LocalDateTime getDateInProgress() {
@@ -87,20 +67,12 @@ public class IssueDto {
         this.priority = priority;
     }
 
-    public Long getProductManagerId() {
-        return productManagerId;
+    public String getResult() {
+        return result;
     }
 
-    public void setProductManagerId(Long productManagerId) {
-        this.productManagerId = productManagerId;
-    }
-
-    public List<Task> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
+    public void setResult(String result) {
+        this.result = result;
     }
 
     public String getDescription() {
@@ -125,5 +97,13 @@ public class IssueDto {
 
     public void setRequestId(Long requestId) {
         this.requestId = requestId;
+    }
+
+    public Long getProductManagerId() {
+        return productManagerId;
+    }
+
+    public void setProductManagerId(Long productManagerId) {
+        this.productManagerId = productManagerId;
     }
 }
