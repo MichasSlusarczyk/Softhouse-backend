@@ -2,18 +2,18 @@ package pl.polsl.softhouse.exceptions.user;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
-import javax.validation.ValidationException;
+import org.springframework.web.client.HttpStatusCodeException;
+import pl.polsl.softhouse.exceptions.NotFoundException;
 
 @ResponseStatus(code = HttpStatus.NOT_FOUND)
-public class UserNotFoundException extends UserException {
+public class UserNotFoundException extends NotFoundException {
     
     public UserNotFoundException(String message) {
-        super(HttpStatus.NOT_FOUND, message);
+        super(message);
     }
 
     public UserNotFoundException(long id) {
-        this("User with ID \""+ id +"\" does not exist.");
+        super("User", id);
     }
 
     public static UserNotFoundException fromUsername(String username) {
