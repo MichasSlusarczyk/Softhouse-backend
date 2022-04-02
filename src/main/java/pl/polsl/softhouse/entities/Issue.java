@@ -1,5 +1,7 @@
 package pl.polsl.softhouse.entities;
 
+import pl.polsl.softhouse.entities.enums.IssueType;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -15,7 +17,6 @@ public class Issue extends AbstractWorkUnit {
     @Id
     @SequenceGenerator(name=GEN_NAME, allocationSize=1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator=GEN_NAME)
-    @NotNull
     private Long id;
 
     @Column(nullable = false, length = MAX_DESC_LENGTH)
@@ -23,8 +24,13 @@ public class Issue extends AbstractWorkUnit {
     @Size(max = MAX_DESC_LENGTH)
     private String description = "";
 
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "user_id", nullable = true)
+    @Enumerated(EnumType.ORDINAL)
+    @Column(nullable = false)
+    private IssueType type;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    @NotNull
     private UserEntity productManager;
 
     @ManyToOne(optional = false)
@@ -73,5 +79,13 @@ public class Issue extends AbstractWorkUnit {
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public IssueType getType() {
+        return type;
+    }
+
+    public void setType(IssueType type) {
+        this.type = type;
     }
 }

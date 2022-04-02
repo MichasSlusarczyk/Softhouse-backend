@@ -16,7 +16,6 @@ public class Request extends AbstractWorkUnit {
     @Id
     @SequenceGenerator(name=GEN_NAME, allocationSize=1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator=GEN_NAME)
-    @NotNull
     private Long id;
 
     @Column(nullable = false, length = MAX_DESC_LENGTH)
@@ -24,8 +23,9 @@ public class Request extends AbstractWorkUnit {
     @Size(max = MAX_DESC_LENGTH)
     private String description = "";
 
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "user_id", nullable = true)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    @NotNull
     private UserEntity accountManager;
 
     @OneToMany(mappedBy = "request")

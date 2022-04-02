@@ -14,7 +14,6 @@ public class SystemClient {
     @ManyToOne
     @MapsId("systemId")
     @JoinColumn(name = "system_id")
-    @NotNull
     private SystemEntity system;
 
     @ManyToOne
