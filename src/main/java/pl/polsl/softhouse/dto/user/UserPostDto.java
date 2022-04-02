@@ -2,13 +2,32 @@ package pl.polsl.softhouse.dto.user;
 
 import pl.polsl.softhouse.entities.enums.UserRole;
 
-public class UserPostDto extends UserAuthDto {
+import java.io.Serializable;
 
+public class UserPostDto implements Serializable {
+    private String username;
+    private String password;
     private String firstName;
     private String lastName;
     private UserRole role;
     private String email;
     private String telNum;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public String getFirstName() {
         return firstName;

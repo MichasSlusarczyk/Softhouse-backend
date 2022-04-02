@@ -7,9 +7,9 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import pl.polsl.softhouse.dto.user.UserAuthDto;
-import pl.polsl.softhouse.dto.user.UserPostDto;
 import pl.polsl.softhouse.dto.user.UserGetDto;
 import pl.polsl.softhouse.dto.user.UserMapper;
+import pl.polsl.softhouse.dto.user.UserPostDto;
 import pl.polsl.softhouse.entities.UserEntity;
 import pl.polsl.softhouse.exceptions.InvalidDataException;
 import pl.polsl.softhouse.exceptions.user.UserAlreadyExistsException;
@@ -36,7 +36,7 @@ public class UserService {
     public List<UserGetDto> getAllUsers() {
         return userRepository.findAll()
                 .stream()
-                .map(userMapper::userToInfoDto)
+                .map(userMapper::userToGetDto)
                 .collect(Collectors.toList());
     }
 
@@ -46,7 +46,7 @@ public class UserService {
         }
 
         return userRepository.findById(id)
-                .map(userMapper::userToInfoDto)
+                .map(userMapper::userToGetDto)
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 

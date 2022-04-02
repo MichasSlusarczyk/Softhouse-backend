@@ -12,9 +12,9 @@ public interface UserMapper {
 
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-    UserGetDto userToInfoDto(UserEntity user);
+    UserGetDto userToGetDto(UserEntity user);
 
-    @Mapping(target = "id", constant = "0L")
+    @Mapping(target = "id", expression = "java(null)")
     @Mapping(target = "active", constant = "true")
     UserEntity createUserFromDto(UserPostDto userDto);
 

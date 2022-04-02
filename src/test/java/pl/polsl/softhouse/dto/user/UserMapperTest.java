@@ -11,7 +11,7 @@ public class UserMapperTest {
     private final UserMapper userMapper = UserMapper.INSTANCE;
 
     @Test
-    void shouldMapUserToInfoDto() {
+    void shouldMapUserToGetDto() {
         // Given
         UserEntity user = new UserEntity();
         user.setUsername("testUser");
@@ -24,21 +24,22 @@ public class UserMapperTest {
         user.setRole(UserRole.WORKER);
 
         // When
-        UserGetDto userInfoDto = userMapper.userToInfoDto(user);
+        UserGetDto userDto = userMapper.userToGetDto(user);
 
         // Then
-        assertNotNull(userInfoDto);
-        assertEquals(user.getUsername(), userInfoDto.getUsername());
-        assertEquals(user.getFirstName(), userInfoDto.getFirstName());
-        assertEquals(user.getLastName(), userInfoDto.getLastName());
-        assertEquals(user.getEmail(), userInfoDto.getEmail());
-        assertEquals(user.getTelNum(), userInfoDto.getTelNum());
-        assertEquals(user.getRole().toString(), userInfoDto.getRole());
-        assertEquals(user.getActive(), userInfoDto.getActive());
+        assertNotNull(userDto);
+        assertEquals(user.getId(), userDto.getId());
+        assertEquals(user.getUsername(), userDto.getUsername());
+        assertEquals(user.getFirstName(), userDto.getFirstName());
+        assertEquals(user.getLastName(), userDto.getLastName());
+        assertEquals(user.getEmail(), userDto.getEmail());
+        assertEquals(user.getTelNum(), userDto.getTelNum());
+        assertEquals(user.getRole(), userDto.getRole());
+        assertEquals(user.getActive(), userDto.getActive());
     }
 
     @Test
-    void shouldCreateUserFromDto() {
+    void shouldCreateUserFromPostDto() {
         // Given
         UserPostDto userDto = new UserPostDto();
         userDto.setUsername("testUser");
@@ -48,45 +49,15 @@ public class UserMapperTest {
         userDto.setEmail("user@user.com");
         userDto.setTelNum("123456789");
         userDto.setRole(UserRole.WORKER);
-        userDto.setActive(true);
 
         // When
         UserEntity user = userMapper.createUserFromDto(userDto);
 
         // Then
         assertNotNull(user);
-        assertEquals(0L, user.getId());
+        assertNull(user.getId());
         assertEquals(userDto.getUsername(), user.getUsername());
         assertEquals(userDto.getPassword(), user.getPassword());
-        assertEquals(userDto.getFirstName(), user.getFirstName());
-        assertEquals(userDto.getLastName(), user.getLastName());
-        assertEquals(userDto.getEmail(), user.getEmail());
-        assertEquals(userDto.getTelNum(), user.getTelNum());
-        assertEquals(userDto.getRole(), user.getRole());
-        assertEquals(true, user.getActive());
-    }
-
-    @Test
-    void shouldCreateUserFromDtoWithDefaultValues() {
-        // Given
-        UserPostDto userDto = new UserPostDto();
-        userDto.setId(100L);
-        userDto.setUsername("testUser");
-        userDto.setPassword("testPassword");
-        userDto.setFirstName("Meredith");
-        userDto.setLastName("McUser");
-        userDto.setEmail("user@user.com");
-        userDto.setTelNum("123456789");
-        userDto.setRole(UserRole.WORKER);
-        userDto.setActive(false);
-
-        // When
-        UserEntity user = userMapper.createUserFromDto(userDto);
-
-        // Then
-        assertNotNull(user);
-        assertEquals(0L, user.getId());
-        assertEquals(userDto.getUsername(), user.getUsername());
         assertEquals(userDto.getFirstName(), user.getFirstName());
         assertEquals(userDto.getLastName(), user.getLastName());
         assertEquals(userDto.getEmail(), user.getEmail());
@@ -109,7 +80,6 @@ public class UserMapperTest {
         user.setRole(UserRole.WORKER);
 
         UserPostDto userDto = new UserPostDto();
-        userDto.setId(20L);
         userDto.setUsername("newUsername");
         userDto.setRole(UserRole.ADMIN);
 

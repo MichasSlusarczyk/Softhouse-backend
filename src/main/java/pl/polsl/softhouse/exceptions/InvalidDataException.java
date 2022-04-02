@@ -2,12 +2,12 @@ package pl.polsl.softhouse.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import pl.polsl.softhouse.exceptions.user.UserException;
+import org.springframework.web.client.HttpStatusCodeException;
 
 @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-public class InvalidDataException extends RuntimeException {
+public class InvalidDataException extends HttpStatusCodeException {
 
     public InvalidDataException(String message) {
-        super(message);
+        super(HttpStatus.BAD_REQUEST, message);
     }
 }

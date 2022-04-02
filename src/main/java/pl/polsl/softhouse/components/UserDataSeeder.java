@@ -16,12 +16,12 @@ public class UserDataSeeder implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         seedUsers();
     }
 
     private void seedUsers() {
-        UserEntity user = new UserEntity(0L,
+        UserEntity user = new UserEntity(null,
                 "admin",
                 "admin",
                 true,
