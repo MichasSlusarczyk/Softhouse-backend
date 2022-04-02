@@ -64,9 +64,7 @@ public class IssueService {
         if(userId == null)
             throw new InvalidDataException("No user id provided");
 
-        return issueRepository
-                .findAllByUserId(userId)
-                .orElseThrow(() -> new IssueNotFoundException("There are no issues connected to user with id " + userId));
+        return issueRepository.findAllIssuesByUserId(userId);
     }
 
     private void validate(Issue issue) {
