@@ -3,6 +3,8 @@ package pl.polsl.softhouse.entities;
 import java.util.List;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "clients")
@@ -14,9 +16,12 @@ public class Client {
     @Id
     @SequenceGenerator(name=GEN_NAME, allocationSize=1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator=GEN_NAME)
+    @NotNull
     private Long id;
 
     @Column(nullable = false, length = MAX_NAME_LENGTH)
+    @NotNull
+    @Size(min = 3, max = MAX_NAME_LENGTH)
     private String name;
 
     @OneToMany(mappedBy = "client")
