@@ -1,6 +1,8 @@
 package pl.polsl.softhouse.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -13,10 +15,13 @@ public class Issue extends AbstractWorkUnit {
     @Id
     @SequenceGenerator(name=GEN_NAME, allocationSize=1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator=GEN_NAME)
+    @NotNull
     private Long id;
 
     @Column(nullable = false, length = MAX_DESC_LENGTH)
-    private String description;
+    @NotNull
+    @Size(max = MAX_DESC_LENGTH)
+    private String description = "";
 
     @ManyToOne(optional = true)
     @JoinColumn(name = "user_id", nullable = true)
@@ -24,6 +29,7 @@ public class Issue extends AbstractWorkUnit {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "request_id", nullable = false)
+    @NotNull
     private Request request;
 
     @OneToMany(mappedBy = "issue")

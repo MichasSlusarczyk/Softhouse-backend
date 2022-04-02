@@ -39,7 +39,7 @@ public class UserEntity {
     private String username;
 
     @Column(nullable = false, length = 64)
-    @NotNull()
+    @NotNull
     //@Size(min = 64, max = 64, message = "password hash must be 64 characters long") // Uncomment this when hashing is implemented.
     private String password;
 
