@@ -13,7 +13,7 @@ public interface IssueMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "productManagerId", target = "productManager")
     @Mapping(source = "requestId", target = "request")
-    Issue updateIssue(IssueDto issueDto, @MappingTarget Issue issue);
+    Issue updateIssue(IssueGetDto issueGetDto, @MappingTarget Issue issue);
 
     @Mapping(target = "id")
     UserEntity getUserFromId(Long id);

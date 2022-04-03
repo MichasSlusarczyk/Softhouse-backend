@@ -28,8 +28,9 @@ public class Issue extends AbstractWorkUnit {
     @Column(nullable = false)
     private IssueType type;
 
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "user_id", nullable = true)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    @NotNull
     private UserEntity productManager;
 
     @ManyToOne(optional = false)

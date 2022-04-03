@@ -3,7 +3,7 @@ package pl.polsl.softhouse.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.polsl.softhouse.dto.issue.IssueDto;
+import pl.polsl.softhouse.dto.issue.IssueGetDto;
 import pl.polsl.softhouse.dto.issue.IssuePostDto;
 import pl.polsl.softhouse.entities.Issue;
 import pl.polsl.softhouse.services.IssueService;
@@ -36,8 +36,8 @@ public class IssueController {
     }
 
     @PutMapping(path = "{id}")
-    public ResponseEntity<Void> updateIssue(@PathVariable Long id, @RequestBody IssueDto issueDto) {
-        issueService.updateIssue(id, issueDto);
+    public ResponseEntity<Void> updateIssue(@PathVariable Long id, @RequestBody IssueGetDto issueGetDto) {
+        issueService.updateIssue(id, issueGetDto);
         return ResponseEntity.ok().build();
     }
 

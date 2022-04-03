@@ -8,7 +8,7 @@ import pl.polsl.softhouse.entities.enums.WorkStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class IssueDto {
+public class IssueGetDto {
     private Long id;
     private WorkStatus status;
     private String result;
