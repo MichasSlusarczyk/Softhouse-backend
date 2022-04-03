@@ -10,7 +10,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import pl.polsl.softhouse.entities.enums.IssueType;
 import pl.polsl.softhouse.entities.enums.WorkPriority;
 import pl.polsl.softhouse.entities.enums.WorkStatus;
 
@@ -79,12 +78,12 @@ public abstract class AbstractWorkUnit {
         this.dateInProgress = dateInProgress;
     }
 
-    public LocalDateTime getDateFinished() {
+    public LocalDateTime getDateClosed() {
         return dateClosed;
     }
 
-    public void setDateFinished(LocalDateTime dateFinished) {
-        this.dateClosed = dateFinished;
+    public void setDateClosed(LocalDateTime dateClosed) {
+        this.dateClosed = dateClosed;
     }
 
     public LocalDateTime getDeadline() {
