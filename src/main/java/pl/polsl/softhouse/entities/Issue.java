@@ -17,7 +17,6 @@ public class Issue extends AbstractWorkUnit {
     @Id
     @SequenceGenerator(name=GEN_NAME, allocationSize=1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator=GEN_NAME)
-    @NotNull
     private Long id;
 
     @Column(nullable = false, length = MAX_DESC_LENGTH)
@@ -29,8 +28,9 @@ public class Issue extends AbstractWorkUnit {
     @Column(nullable = false)
     private IssueType type;
 
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "user_id", nullable = true)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    @NotNull
     private UserEntity productManager;
 
     @ManyToOne(optional = false)
@@ -85,5 +85,7 @@ public class Issue extends AbstractWorkUnit {
         return type;
     }
 
-    public void setType(IssueType type) { this.type = type; }
+    public void setType(IssueType type) {
+        this.type = type;
+    }
 }

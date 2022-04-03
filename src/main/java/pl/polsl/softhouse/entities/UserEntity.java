@@ -29,7 +29,6 @@ public class UserEntity {
     @Id
     @SequenceGenerator(name = GEN_NAME, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = GEN_NAME)
-    @NotNull
     private Long id;
 
     @Column(nullable = false, length = MAX_USERNAME_LENGTH)
