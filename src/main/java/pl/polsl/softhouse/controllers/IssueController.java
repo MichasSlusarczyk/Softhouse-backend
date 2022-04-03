@@ -20,12 +20,12 @@ public class IssueController {
     IssueController(IssueService issueService) { this.issueService = issueService; }
 
     @GetMapping
-    public ResponseEntity<List<Issue>> getAllIssues() {
+    public ResponseEntity<List<IssueGetDto>> getAllIssues() {
         return ResponseEntity.ok().body(issueService.getAllIssues());
     }
 
     @GetMapping(path = "{id}")
-    public ResponseEntity<Issue> getIssueById(Long id) {
+    public ResponseEntity<IssueGetDto> getIssueById(Long id) {
         return ResponseEntity.ok().body(issueService.getIssueById(id));
     }
 
@@ -36,13 +36,13 @@ public class IssueController {
     }
 
     @PutMapping(path = "{id}")
-    public ResponseEntity<Void> updateIssue(@PathVariable Long id, @RequestBody IssueGetDto issueGetDto) {
-        issueService.updateIssue(id, issueGetDto);
+    public ResponseEntity<Void> updateIssue(@PathVariable Long id, @RequestBody IssuePostDto issuePostDto) {
+        issueService.updateIssue(id, issuePostDto);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping(path = "productManagersIssues/{userId}")
-    public ResponseEntity<List<Issue>> getIssuesByUserId(@PathVariable Long userId) {
+    public ResponseEntity<List<IssueGetDto>> getIssuesByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok().body(issueService.getIssuesByUserId(userId));
     }
 }

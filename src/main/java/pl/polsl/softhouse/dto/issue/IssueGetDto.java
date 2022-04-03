@@ -18,7 +18,7 @@ public class IssueGetDto {
     private LocalDateTime deadline;
     private WorkPriority priority;
     private Long productManagerId;
-    private List<Task> tasks; //TODO
+//    private List<Task> tasks; // TODO: Wait for Task implementation.
     private String description;
     private IssueType type;
     private Long requestId;
@@ -95,13 +95,14 @@ public class IssueGetDto {
         this.productManagerId = productManagerId;
     }
 
-    public List<Task> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
-    }
+    // TODO: Wait for Task implementation.
+//    public List<Task> getTasks() {
+//        return tasks;
+//    }
+//
+//    public void setTasks(List<Task> tasks) {
+//        this.tasks = tasks;
+//    }
 
     public String getDescription() {
         return description;
