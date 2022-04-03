@@ -6,13 +6,14 @@ import pl.polsl.softhouse.dto.issue.IssueMapper;
 import pl.polsl.softhouse.dto.issue.IssuePostDto;
 import pl.polsl.softhouse.entities.Issue;
 import pl.polsl.softhouse.entities.enums.UserRole;
+import pl.polsl.softhouse.exceptions.AuthorizationException;
 import pl.polsl.softhouse.exceptions.InvalidDataException;
 import pl.polsl.softhouse.exceptions.issue.IssueNotFoundException;
-import pl.polsl.softhouse.exceptions.user.UserException;
 import pl.polsl.softhouse.exceptions.user.UserNotFoundException;
 import pl.polsl.softhouse.repositories.IssueRepository;
 import pl.polsl.softhouse.repositories.UserRepository;
 
+import javax.security.auth.message.AuthException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
@@ -38,7 +39,7 @@ public class IssueService {
     }
 
     public Issue getIssueById(Long id) {
-        if(id == null)
+        if (id == null)
             throw new InvalidDataException("No id provided.");
         return issueRepository
                 .findById(id)
@@ -46,9 +47,9 @@ public class IssueService {
     }
 
     public void updateIssue(Long id, IssueGetDto issueGetDto) {
-        if(id == null || issueGetDto == null)
+        if (id == null || issueGetDto == null)
             throw new InvalidDataException("No id or data provided.");
-        if(issueGetDto.getProductManagerId() != null)
+        if (issueGetDto.getProductManagerId() != null)
             checkUser(issueGetDto.getProductManagerId());
         Issue issue = issueRepository
                 .findById(id)
@@ -58,7 +59,7 @@ public class IssueService {
     }
 
     public void addIssue(IssuePostDto issuePostDto) {
-        if(issuePostDto == null || issuePostDto.getProductManagerId() == null)
+        if (issuePostDto == null || issuePostDto.getProductManagerId() == null)
             throw new InvalidDataException("No data or product manager id provided");
         checkUser(issuePostDto.getProductManagerId());
         Issue issue = issueMapper.createIssueFromIssuePostDto(issuePostDto);
@@ -67,7 +68,7 @@ public class IssueService {
     }
 
     public List<Issue> getIssuesByUserId(Long userId) {
-        if(userId == null)
+        if (userId == null)
             throw new InvalidDataException("No user id provided.");
         checkUser(userId);
         return issueRepository.findAllIssuesByUserId(userId);
@@ -75,15 +76,15 @@ public class IssueService {
 
     private void validate(Issue issue) {
         Set<ConstraintViolation<Issue>> violations = validator.validate(issue);
-        if(!violations.isEmpty())
+        if (!violations.isEmpty())
             throw new ConstraintViolationException(violations);
     }
 
     private void checkUser(long userId) {
-        if(userRepository
+        if (userRepository
                 .findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId))
                 .getRole() != UserRole.PRODUCT_MANAGER)
-            throw new UserException("User with id " + userId + " does not have authority to manage issues.");
+            throw new AuthorizationException("User with id " + userId + " does not have authority to manage issues.");
     }
 }

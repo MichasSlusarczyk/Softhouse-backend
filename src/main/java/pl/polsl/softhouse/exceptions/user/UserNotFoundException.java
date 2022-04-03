@@ -2,7 +2,6 @@ package pl.polsl.softhouse.exceptions.user;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.client.HttpStatusCodeException;
 import pl.polsl.softhouse.exceptions.NotFoundException;
 
 @ResponseStatus(code = HttpStatus.NOT_FOUND)
