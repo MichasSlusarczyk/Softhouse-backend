@@ -47,8 +47,9 @@ public class IssueService {
 
     public void updateIssue(Long id, IssueGetDto issueGetDto) {
         if(id == null || issueGetDto == null)
-            throw new InvalidDataException("No id provided.");
-        checkUser(issueGetDto.getProductManagerId());
+            throw new InvalidDataException("No id or data provided.");
+        if(issueGetDto.getProductManagerId() != null)
+            checkUser(issueGetDto.getProductManagerId());
         Issue issue = issueRepository
                 .findById(id)
                 .map((foundIssue) -> issueMapper.updateIssue(issueGetDto, foundIssue))
@@ -57,8 +58,8 @@ public class IssueService {
     }
 
     public void addIssue(IssuePostDto issuePostDto) {
-        if(issuePostDto == null)
-            throw new InvalidDataException("No Issue object provided");
+        if(issuePostDto == null || issuePostDto.getProductManagerId() == null)
+            throw new InvalidDataException("No data or product manager id provided");
         checkUser(issuePostDto.getProductManagerId());
         Issue issue = issueMapper.createIssueFromIssuePostDto(issuePostDto);
         validate(issue);
@@ -67,7 +68,7 @@ public class IssueService {
 
     public List<Issue> getIssuesByUserId(Long userId) {
         if(userId == null)
-            throw new InvalidDataException("No user id provided");
+            throw new InvalidDataException("No user id provided.");
         checkUser(userId);
         return issueRepository.findAllIssuesByUserId(userId);
     }
@@ -78,7 +79,7 @@ public class IssueService {
             throw new ConstraintViolationException(violations);
     }
 
-    private void checkUser(Long userId) {
+    private void checkUser(long userId) {
         if(userRepository
                 .findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId))
