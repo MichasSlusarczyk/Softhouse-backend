@@ -12,14 +12,14 @@ public interface UserMapper {
 
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-    UserInfoDto userToInfoDto(UserEntity user);
+    UserGetDto userToGetDto(UserEntity user);
 
-    @Mapping(target = "id", constant = "0L")
+    @Mapping(target = "id", expression = "java(null)")
     @Mapping(target = "active", constant = "true")
-    UserEntity createUserFromDto(UserDto userDto);
+    UserEntity createUserFromDto(UserPostDto userDto);
 
     @Mapping(target = "id", ignore = true)
-    UserEntity updateUser(UserDto userDto, @MappingTarget UserEntity user);
+    UserEntity updateUser(UserPostDto userDto, @MappingTarget UserEntity user);
 
     UserAuthDto userToAuthDto(UserEntity user);
 }

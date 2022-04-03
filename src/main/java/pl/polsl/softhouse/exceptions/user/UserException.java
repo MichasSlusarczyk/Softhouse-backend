@@ -7,11 +7,11 @@ import org.springframework.web.client.HttpStatusCodeException;
 @ResponseStatus(code = HttpStatus.BAD_REQUEST)
 public class UserException extends HttpStatusCodeException {
 
-    public UserException(String reason) {
-        super(HttpStatus.BAD_REQUEST, reason);
+    public UserException(String message) {
+        super(HttpStatus.BAD_REQUEST, message);
     }
 
-    public UserException(HttpStatus status, String reason) {
-        super(status, reason);
+    public UserException(HttpStatus status, String message) {
+        super(status, message);
     }
 }

@@ -22,7 +22,7 @@ public class Issue extends AbstractWorkUnit {
     @Column(nullable = false, length = MAX_DESC_LENGTH)
     @NotNull
     @Size(max = MAX_DESC_LENGTH)
-    private String description;
+    private String description = "";
 
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
@@ -85,5 +85,7 @@ public class Issue extends AbstractWorkUnit {
         return type;
     }
 
-    public void setType(IssueType type) { this.type = type; }
+    public void setType(IssueType type) {
+        this.type = type;
+    }
 }

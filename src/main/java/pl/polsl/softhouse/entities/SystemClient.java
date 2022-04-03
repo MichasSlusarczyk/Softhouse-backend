@@ -1,24 +1,30 @@
 package pl.polsl.softhouse.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "system_client")
-@IdClass(SystemClientId.class)
+@Table(name = "system_client",
+        uniqueConstraints = { @UniqueConstraint(columnNames = { "system_id", "client_id", "version" }) })
 public class SystemClient {
 
-    @Id
+    @EmbeddedId
+    SystemClientId id;
+
     @ManyToOne
+    @MapsId("systemId")
     @JoinColumn(name = "system_id")
     private SystemEntity system;
 
-    @Id
     @ManyToOne
+    @MapsId("clientId")
     @JoinColumn(name = "client_id")
+    @NotNull
     private Client client;
 
     @Column(nullable = false, length = 8)
-    private String version;
+    @NotNull
+    private String version = "";
 
     public SystemEntity getSystem() {
         return system;

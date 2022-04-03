@@ -3,6 +3,8 @@ package pl.polsl.softhouse.entities;
 import java.util.List;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "requests")
@@ -17,10 +19,13 @@ public class Request extends AbstractWorkUnit {
     private Long id;
 
     @Column(nullable = false, length = MAX_DESC_LENGTH)
-    private String description;
+    @NotNull
+    @Size(max = MAX_DESC_LENGTH)
+    private String description = "";
 
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "user_id", nullable = true)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    @NotNull
     private UserEntity accountManager;
 
     @OneToMany(mappedBy = "request")
