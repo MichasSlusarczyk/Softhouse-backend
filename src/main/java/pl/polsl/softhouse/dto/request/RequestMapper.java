@@ -9,6 +9,6 @@ public interface RequestMapper {
     @Mapping(target = "id", ignore = true)
     Request updateRequest(RequestDto requestDto, @MappingTarget Request request);
 
-    @Mapping(target = "id", constant = "0L")
+    @Mapping(target = "id", expression = "java(null)")
     Request createRequestFromDto(RequestDto requestDto);
 }

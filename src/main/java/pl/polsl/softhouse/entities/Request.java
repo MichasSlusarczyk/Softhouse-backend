@@ -7,13 +7,13 @@ import javax.persistence.*;
 @Entity
 @Table(name = "requests")
 public class Request extends AbstractWorkUnit {
-    
+
     public static final int MAX_DESC_LENGTH = 1024;
     private static final String GEN_NAME = "request_sequence";
-    
+
     @Id
-    @SequenceGenerator(name=GEN_NAME, allocationSize=1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator=GEN_NAME)
+    @SequenceGenerator(name = GEN_NAME, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = GEN_NAME)
     private Long id;
 
     @Column(nullable = false, length = MAX_DESC_LENGTH)

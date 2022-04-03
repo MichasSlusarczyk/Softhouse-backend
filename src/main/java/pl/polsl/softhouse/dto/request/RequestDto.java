@@ -1,19 +1,13 @@
 package pl.polsl.softhouse.dto.request;
 
-import pl.polsl.softhouse.entities.Issue;
-import pl.polsl.softhouse.entities.Request;
-import pl.polsl.softhouse.entities.Task;
-import pl.polsl.softhouse.entities.UserEntity;
-import pl.polsl.softhouse.entities.enums.IssueType;
 import pl.polsl.softhouse.entities.enums.WorkPriority;
 import pl.polsl.softhouse.entities.enums.WorkStatus;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class RequestDto {
     private Long id;
-    private UserEntity accountManager;
+    private Long accountManagerId;
     private String description;
     private String result;
     private WorkStatus status;
@@ -22,7 +16,7 @@ public class RequestDto {
     private LocalDateTime dateClosed;
     private LocalDateTime deadline;
     private WorkPriority priority;
-    private List<Issue> issues;
+    //private List<Issue> issues;
 
     public Long getId() {
         return id;
@@ -32,12 +26,12 @@ public class RequestDto {
         this.id = id;
     }
 
-    public UserEntity getAccountManager() {
-        return accountManager;
+    public Long getAccountManagerId() {
+        return accountManagerId;
     }
 
-    public void setAccountManager(UserEntity accountManager) {
-        this.accountManager = accountManager;
+    public void setAccountManagerId(Long accountManagerId) {
+        this.accountManagerId = accountManagerId;
     }
 
     public String getDescription() {
@@ -104,11 +98,11 @@ public class RequestDto {
         this.priority = priority;
     }
 
-    public List<Issue> getIssues() {
-        return issues;
-    }
+    //public List<Issue> getIssues() {
+    //    return issues;
+    //}
 
-    public void setIssues(List<Issue> issues) {
-        this.issues = issues;
-    }
+    //public void setIssues(List<Issue> issues) {
+    //    this.issues = issues;
+    //}
 }

@@ -40,24 +40,20 @@ public class RequestService {
                 .orElseThrow(() -> new RequestNotFoundException(id));
     }
 
-    public void deleteRequestById(Long id){
-        if(id == null)
-        {
+    public void deleteRequestById(Long id) {
+        if (id == null) {
             throw new InvalidDataException("No id provided.");
         }
 
-        if(!requestRepository.existsById(id))
-        {
+        if (!requestRepository.existsById(id)) {
             throw new RequestNotFoundException(id);
         }
 
         requestRepository.deleteById(id);
     }
 
-    public void addRequest(RequestDto requestDto)
-    {
-        if (requestDto == null)
-        {
+    public void addRequest(RequestDto requestDto) {
+        if (requestDto == null) {
             throw new InvalidDataException(("No data sent."));
         }
 
@@ -68,9 +64,8 @@ public class RequestService {
     }
 
 
-    public void updateRequest(Long id, RequestDto requestDto){
-        if (id == null || requestDto == null)
-        {
+    public void updateRequest(Long id, RequestDto requestDto) {
+        if (id == null || requestDto == null) {
             throw new InvalidDataException(("No id provided."));
         }
 
@@ -83,10 +78,8 @@ public class RequestService {
         requestRepository.save(request);
     }
 
-    public List<Request> getAllRequestsByUserId(Long userId)
-    {
-        if (userId == null )
-        {
+    public List<Request> getAllRequestsByUserId(Long userId) {
+        if (userId == null) {
             throw new InvalidDataException(("No user id provided."));
         }
 
