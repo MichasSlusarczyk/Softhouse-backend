@@ -1,16 +1,11 @@
 package pl.polsl.softhouse.services;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Service;
-
-import pl.polsl.softhouse.dto.user.UserAuthDto;
 import pl.polsl.softhouse.dto.user.UserGetDto;
 import pl.polsl.softhouse.dto.user.UserMapper;
 import pl.polsl.softhouse.dto.user.UserPostDto;
 import pl.polsl.softhouse.entities.UserEntity;
+import pl.polsl.softhouse.exceptions.AuthenticationException;
 import pl.polsl.softhouse.exceptions.InvalidDataException;
 import pl.polsl.softhouse.exceptions.user.UserAlreadyExistsException;
 import pl.polsl.softhouse.exceptions.user.UserNotFoundException;
@@ -19,6 +14,10 @@ import pl.polsl.softhouse.repositories.UserRepository;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -90,14 +89,19 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public UserAuthDto getUserAuthByUsername(String username) {
-        if (username == null) {
+    public UserGetDto authorizeUser(String username, String password) {
+        if (username == null || password == null) {
             throw new InvalidDataException("No data sent.");
         }
 
-        return userRepository.findByUsername(username)
-                .map(userMapper::userToAuthDto)
+        UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> UserNotFoundException.fromUsername(username));
+
+        if (user.getPassword().equals(password)) {
+            return userMapper.userToGetDto(user);
+        } else {
+            throw new AuthenticationException("Invalid password.");
+        }
     }
 
     private void validateOrThrow(UserEntity user) {
