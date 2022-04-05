@@ -5,19 +5,22 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "system_client",
-        uniqueConstraints = { @UniqueConstraint(columnNames = { "system_id", "client_id", "version" }) })
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"system_id", "client_id", "version"})})
 public class SystemClient {
 
-    @EmbeddedId
-    SystemClientId id;
+    private static final String GEN_NAME = "system_client_sequence";
+
+    @Id
+    @SequenceGenerator(name = GEN_NAME, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = GEN_NAME)
+    private Long id;
 
     @ManyToOne
-    @MapsId("systemId")
     @JoinColumn(name = "system_id")
+    @NotNull
     private SystemEntity system;
 
     @ManyToOne
-    @MapsId("clientId")
     @JoinColumn(name = "client_id")
     @NotNull
     private Client client;
@@ -48,5 +51,13 @@ public class SystemClient {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

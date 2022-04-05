@@ -9,13 +9,13 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "systems")
 public class SystemEntity {
-    
+
     public static final int MAX_NAME_LENGTH = 256;
     private static final String GEN_NAME = "system_sequence";
 
     @Id
-    @SequenceGenerator(name=GEN_NAME, allocationSize=1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator=GEN_NAME)
+    @SequenceGenerator(name = GEN_NAME, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = GEN_NAME)
     private Long id;
 
     @Column(nullable = false, length = MAX_NAME_LENGTH)
