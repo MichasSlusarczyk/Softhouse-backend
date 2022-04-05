@@ -3,8 +3,9 @@ package pl.polsl.softhouse.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.polsl.softhouse.dto.request.RequestDto;
-import pl.polsl.softhouse.entities.Request;
+import pl.polsl.softhouse.dto.request.RequestGetDto;
+import pl.polsl.softhouse.dto.request.RequestPostDto;
+import pl.polsl.softhouse.dto.request.RequestPutDto;
 import pl.polsl.softhouse.services.RequestService;
 
 import java.util.List;
@@ -21,12 +22,12 @@ public class RequestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Request>> getAllRequests() {
+    public ResponseEntity<List<RequestGetDto>> getAllRequests() {
         return ResponseEntity.ok().body(requestService.getAllRequests());
     }
 
     @GetMapping(path = "{id}")
-    public ResponseEntity<Request> getRequestById(@PathVariable Long id) {
+    public ResponseEntity<RequestGetDto> getRequestById(@PathVariable Long id) {
         return ResponseEntity.ok().body(requestService.getRequestById(id));
     }
 
@@ -38,20 +39,21 @@ public class RequestController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addRequest(@RequestBody RequestDto requestDto) {
-        requestService.addRequest(requestDto);
+    public ResponseEntity<Void> addRequest(@RequestBody RequestPostDto requestPostDto) {
+        requestService.addRequest(requestPostDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+
     @PutMapping(path = "{id}")
-    public ResponseEntity<Void> updateRequest(@PathVariable Long id, @RequestBody RequestDto requestDto) {
-        requestService.updateRequest(id, requestDto);
+    public ResponseEntity<Void> updateRequest(@PathVariable Long id, @RequestBody RequestPutDto requestPutDto) {
+        requestService.updateRequest(id, requestPutDto);
 
         return ResponseEntity.ok().build();
     }
 
     @GetMapping(path = "accountManagerRequests/{userId}")
-    public ResponseEntity<List<Request>> getAllAccountManagerRequestsById(@PathVariable Long userId) {
+    public ResponseEntity<List<RequestGetDto>> getAllAccountManagerRequestsById(@PathVariable Long userId) {
         return ResponseEntity.ok().body(requestService.getAllRequestsByUserId(userId));
     }
 }

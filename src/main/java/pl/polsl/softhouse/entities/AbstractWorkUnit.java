@@ -20,7 +20,7 @@ public abstract class AbstractWorkUnit {
     protected WorkStatus status = WorkStatus.OPEN;
 
     @Column(nullable = false, length = RESULT_LENGTH)
-    protected String result;
+    protected String result = "";
 
     @Column(nullable = false)
     protected LocalDateTime dateOpened = LocalDateTime.now();

@@ -5,7 +5,7 @@ import pl.polsl.softhouse.entities.enums.WorkStatus;
 
 import java.time.LocalDateTime;
 
-public class RequestDto {
+public class RequestGetDto {
     private Long id;
     private Long accountManagerId;
     private String description;
@@ -16,7 +16,6 @@ public class RequestDto {
     private LocalDateTime dateClosed;
     private LocalDateTime deadline;
     private WorkPriority priority;
-    //private List<Issue> issues;
 
     public Long getId() {
         return id;
@@ -97,12 +96,4 @@ public class RequestDto {
     public void setPriority(WorkPriority priority) {
         this.priority = priority;
     }
-
-    //public List<Issue> getIssues() {
-    //    return issues;
-    //}
-
-    //public void setIssues(List<Issue> issues) {
-    //    this.issues = issues;
-    //}
 }

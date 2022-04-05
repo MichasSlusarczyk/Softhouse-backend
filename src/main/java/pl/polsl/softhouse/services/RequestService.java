@@ -1,7 +1,9 @@
 package pl.polsl.softhouse.services;
 
 import org.springframework.stereotype.Service;
-import pl.polsl.softhouse.dto.request.RequestDto;
+import pl.polsl.softhouse.dto.request.RequestGetDto;
+import pl.polsl.softhouse.dto.request.RequestPostDto;
+import pl.polsl.softhouse.dto.request.RequestPutDto;
 import pl.polsl.softhouse.dto.request.RequestMapper;
 import pl.polsl.softhouse.entities.Request;
 import pl.polsl.softhouse.exceptions.InvalidDataException;
@@ -11,6 +13,7 @@ import pl.polsl.softhouse.repositories.RequestRepository;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -27,17 +30,32 @@ public class RequestService {
         this.validator = validator;
     }
 
-    public List<Request> getAllRequests() {
-        return requestRepository.findAll();
+    public List<RequestGetDto> getAllRequests() {
+
+        ArrayList<RequestGetDto> resultList = new ArrayList<>();
+        requestRepository.findAll().forEach((c) ->  resultList.add(requestMapper.getRequest(c)));
+        return resultList;
     }
 
-    public Request getRequestById(Long id) {
+    public RequestGetDto getRequestById(Long id) {
         if (id == null) {
             throw new InvalidDataException("No id provided.");
         }
 
-        return requestRepository.findById(id)
+        Request request = requestRepository.findById(id)
                 .orElseThrow(() -> new RequestNotFoundException(id));
+
+        return requestMapper.getRequest(request);
+    }
+
+    public List<RequestGetDto> getAllRequestsByUserId(Long userId) {
+        if (userId == null) {
+            throw new InvalidDataException(("No user id provided."));
+        }
+
+        ArrayList<RequestGetDto> resultList = new ArrayList<>();
+        requestRepository.findAllByUserId(userId).forEach((c) ->  resultList.add(requestMapper.getRequest(c)));
+        return resultList;
     }
 
     public void deleteRequestById(Long id) {
@@ -52,39 +70,30 @@ public class RequestService {
         requestRepository.deleteById(id);
     }
 
-    public void addRequest(RequestDto requestDto) {
-        if (requestDto == null) {
+    public void addRequest(RequestPostDto requestPostDto) {
+        if (requestPostDto == null) {
             throw new InvalidDataException(("No data sent."));
         }
 
-        Request request = requestMapper.createRequestFromDto(requestDto);
+        Request request = requestMapper.addRequest(requestPostDto);
         validateOrThrow(request);
 
         requestRepository.save(request);
     }
 
 
-    public void updateRequest(Long id, RequestDto requestDto) {
-        if (id == null || requestDto == null) {
+    public void updateRequest(Long id, RequestPutDto requestPutDto) {
+        if (id == null || requestPutDto == null) {
             throw new InvalidDataException(("No id provided."));
         }
 
         Request request = requestRepository
                 .findById(id)
                 .map((foundRequest) -> requestMapper
-                        .updateRequest(requestDto, foundRequest))
+                        .updateRequest(requestPutDto, foundRequest))
                 .orElseThrow(() -> new RequestNotFoundException(id));
 
         requestRepository.save(request);
-    }
-
-    public List<Request> getAllRequestsByUserId(Long userId) {
-        if (userId == null) {
-            throw new InvalidDataException(("No user id provided."));
-        }
-
-        return requestRepository.findAllByUserId(userId).orElseThrow(() ->
-                new RequestNotFoundException("No request founded correlated with user id " + userId));
     }
 
     private void validateOrThrow(Request request) {

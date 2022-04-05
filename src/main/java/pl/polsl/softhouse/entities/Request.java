@@ -19,8 +19,8 @@ public class Request extends AbstractWorkUnit {
     @Column(nullable = false, length = MAX_DESC_LENGTH)
     private String description;
 
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "user_id", nullable = true)
+    @ManyToOne()
+    @JoinColumn(name = "user_id")
     private UserEntity accountManager;
 
     @OneToMany(mappedBy = "request")
@@ -49,4 +49,13 @@ public class Request extends AbstractWorkUnit {
     public void setAccountManager(UserEntity accountManager) {
         this.accountManager = accountManager;
     }
+
+    public List<Issue> getIssues() {
+        return issues;
+    }
+
+    public void setIssues(List<Issue> issues) {
+        this.issues = issues;
+    }
+
 }
