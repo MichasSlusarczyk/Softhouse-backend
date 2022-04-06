@@ -9,6 +9,7 @@ import pl.polsl.softhouse.entities.Request;
 import pl.polsl.softhouse.exceptions.InvalidDataException;
 import pl.polsl.softhouse.exceptions.request.RequestNotFoundException;
 import pl.polsl.softhouse.repositories.RequestRepository;
+import pl.polsl.softhouse.repositories.UserRepository;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -21,11 +22,13 @@ import java.util.Set;
 public class RequestService {
 
     private final RequestRepository requestRepository;
+    private final UserRepository userRepository;
     private final RequestMapper requestMapper;
     private final Validator validator;
 
-    public RequestService(RequestRepository requestRepository, RequestMapper requestMapper, Validator validator) {
+    public RequestService(RequestRepository requestRepository, UserRepository userRepository, RequestMapper requestMapper, Validator validator) {
         this.requestRepository = requestRepository;
+        this.userRepository = userRepository;
         this.requestMapper = requestMapper;
         this.validator = validator;
     }
@@ -53,6 +56,8 @@ public class RequestService {
             throw new InvalidDataException(("No user id provided."));
         }
 
+        checkUser(userId);
+
         ArrayList<RequestGetDto> resultList = new ArrayList<>();
         requestRepository.findAllByUserId(userId).forEach((c) ->  resultList.add(requestMapper.getRequest(c)));
         return resultList;
@@ -75,6 +80,8 @@ public class RequestService {
             throw new InvalidDataException(("No data sent."));
         }
 
+        checkUser(requestPostDto.getAccountManagerId());
+
         Request request = requestMapper.addRequest(requestPostDto);
         validateOrThrow(request);
 
@@ -87,6 +94,10 @@ public class RequestService {
             throw new InvalidDataException(("No id provided."));
         }
 
+        if(!requestRepository.existsById(id)) {
+            checkUser(requestPutDto.getAccountManagerId());
+        }
+
         Request request = requestRepository
                 .findById(id)
                 .map((foundRequest) -> requestMapper
@@ -94,6 +105,10 @@ public class RequestService {
                 .orElseThrow(() -> new RequestNotFoundException(id));
 
         requestRepository.save(request);
+    }
+
+    public void checkUser(Long id){
+
     }
 
     private void validateOrThrow(Request request) {
