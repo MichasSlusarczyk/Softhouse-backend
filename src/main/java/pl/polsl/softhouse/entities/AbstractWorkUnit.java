@@ -26,7 +26,7 @@ public abstract class AbstractWorkUnit {
     @Column(nullable = false, length = MAX_RESULT_LENGTH)
     @NotNull
     @Size(max = MAX_RESULT_LENGTH)
-    protected String result;
+    protected String result = "";
 
     @Column(nullable = false)
     @NotNull

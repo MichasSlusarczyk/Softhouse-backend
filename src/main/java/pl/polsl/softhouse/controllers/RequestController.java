@@ -3,11 +3,13 @@ package pl.polsl.softhouse.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.polsl.softhouse.dto.request.RequestGetDto;
 import pl.polsl.softhouse.dto.request.RequestPostDto;
 import pl.polsl.softhouse.dto.request.RequestPutDto;
 import pl.polsl.softhouse.services.RequestService;
 
+import java.net.URI;
 import java.util.List;
 
 @CrossOrigin
@@ -40,10 +42,14 @@ public class RequestController {
 
     @PostMapping
     public ResponseEntity<Void> addRequest(@RequestBody RequestPostDto requestPostDto) {
-        requestService.addRequest(requestPostDto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
+        long id = requestService.addRequest(requestPostDto);
+        URI createdUri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(id)
+                .toUri();
 
+        return ResponseEntity.created(createdUri).build();
+    }
 
     @PutMapping(path = "{id}")
     public ResponseEntity<Void> updateRequest(@PathVariable Long id, @RequestBody RequestPutDto requestPutDto) {

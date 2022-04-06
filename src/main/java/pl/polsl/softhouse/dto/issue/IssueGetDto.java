@@ -24,6 +24,14 @@ public class IssueGetDto {
     private IssueType type;
     private Long requestId;
 
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
     public Long getId() {
         return id;
     }
