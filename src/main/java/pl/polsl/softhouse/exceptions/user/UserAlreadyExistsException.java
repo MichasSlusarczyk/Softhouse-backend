@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(code = HttpStatus.BAD_REQUEST)
 public class UserAlreadyExistsException extends UserException {
     
-    public UserAlreadyExistsException(String reason) {
-        super(reason);
+    public UserAlreadyExistsException(String message) {
+        super(message);
     }
 
     public static UserAlreadyExistsException fromUsername(String username) {

@@ -1,6 +1,8 @@
 package pl.polsl.softhouse.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "tasks")
@@ -15,10 +17,13 @@ public class Task extends AbstractWorkUnit {
     private Long id;
 
     @Column(nullable = false, length = MAX_NAME_LENGTH)
-    private String name;
+    @NotNull
+    @Size(min = 3, max = MAX_NAME_LENGTH)
+    private String name = "";
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "issue_id", nullable = false)
+    @NotNull
     private Issue issue;
 
     @ManyToOne(optional = true)

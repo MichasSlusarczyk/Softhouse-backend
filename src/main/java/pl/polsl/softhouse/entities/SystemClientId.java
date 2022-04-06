@@ -1,25 +1,31 @@
 package pl.polsl.softhouse.entities;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.io.Serializable;
 
+@Embeddable
 public class SystemClientId implements Serializable {
+
+    @Column(name = "system_id")
+    private Long systemId;
+
+    @Column(name = "client_id")
+    private Long clientId;
     
-    private Long system;
-    private Long client;
-    
-    public Long getSystem() {
-        return system;
+    public Long getSystemId() {
+        return systemId;
     }
     
-    public void setSystem(Long system) {
-        this.system = system;
+    public void setSystemId(Long systemId) {
+        this.systemId = systemId;
     }
     
-    public Long getClient() {
-        return client;
+    public Long getClientId() {
+        return clientId;
     }
     
-    public void setClient(Long client) {
-        this.client = client;
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
 }

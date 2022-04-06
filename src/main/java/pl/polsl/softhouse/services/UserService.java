@@ -7,9 +7,9 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import pl.polsl.softhouse.dto.user.UserAuthDto;
-import pl.polsl.softhouse.dto.user.UserDto;
-import pl.polsl.softhouse.dto.user.UserInfoDto;
+import pl.polsl.softhouse.dto.user.UserGetDto;
 import pl.polsl.softhouse.dto.user.UserMapper;
+import pl.polsl.softhouse.dto.user.UserPostDto;
 import pl.polsl.softhouse.entities.UserEntity;
 import pl.polsl.softhouse.exceptions.InvalidDataException;
 import pl.polsl.softhouse.exceptions.user.UserAlreadyExistsException;
@@ -33,24 +33,24 @@ public class UserService {
         this.validator = validator;
     }
 
-    public List<UserInfoDto> getAllUsers() {
+    public List<UserGetDto> getAllUsers() {
         return userRepository.findAll()
                 .stream()
-                .map(userMapper::userToInfoDto)
+                .map(userMapper::userToGetDto)
                 .collect(Collectors.toList());
     }
 
-    public UserInfoDto getUserById(Long id) {
+    public UserGetDto getUserById(Long id) {
         if (id == null) {
             throw new InvalidDataException("No ID provided.");
         }
 
         return userRepository.findById(id)
-                .map(userMapper::userToInfoDto)
+                .map(userMapper::userToGetDto)
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    public void addUser(UserDto userDto) {
+    public long addUser(UserPostDto userDto) {
         if (userDto == null) {
             throw new InvalidDataException("No data sent.");
         }
@@ -62,7 +62,7 @@ public class UserService {
         UserEntity user = userMapper.createUserFromDto(userDto);
         validateOrThrow(user);
 
-        userRepository.save(user);
+        return userRepository.save(user).getId();
     }
 
     public void deleteUser(Long id) {
@@ -77,7 +77,7 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public void updateUser(Long id, UserDto userDto) {
+    public void updateUser(Long id, UserPostDto userDto) {
         if (id == null || userDto == null) {
             throw new InvalidDataException("No data sent.");
         }
