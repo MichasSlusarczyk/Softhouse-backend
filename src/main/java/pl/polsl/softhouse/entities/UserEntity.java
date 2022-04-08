@@ -18,12 +18,12 @@ import javax.validation.constraints.Size;
 import pl.polsl.softhouse.entities.enums.UserRole;
 
 @Entity
-@Table(name="users", uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }) })
+@Table(name="users")
 public class UserEntity {
 
     private static final String GEN_NAME = "user_sequence";
     public static final int MAX_USERNAME_LENGTH = 64;
-    public static final int MAX_NAME_LENGTH = 64;
+    public static final int MAX_NAME_LENGTH = 40;
     public static final int MAX_EMAIL_LENGTH = 64;
 
     @Id
@@ -31,7 +31,7 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = GEN_NAME)
     private Long id;
 
-    @Column(nullable = false, length = MAX_USERNAME_LENGTH)
+    @Column(nullable = false, length = MAX_USERNAME_LENGTH, unique = true)
     @NotNull
     @Size(min = 4, max = MAX_USERNAME_LENGTH,
             message = "Username must be between 4 and " + MAX_USERNAME_LENGTH + " characters")

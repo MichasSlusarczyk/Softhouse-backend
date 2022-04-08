@@ -1,5 +1,7 @@
 package pl.polsl.softhouse.entities;
 
+import pl.polsl.softhouse.entities.enums.TaskType;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -26,9 +28,14 @@ public class Task extends AbstractWorkUnit {
     @NotNull
     private Issue issue;
 
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "user_id", nullable = true)
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private UserEntity worker;
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(nullable = false)
+    @NotNull
+    private TaskType type;
 
     public Long getId() {
         return id;

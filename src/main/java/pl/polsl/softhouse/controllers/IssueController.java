@@ -17,7 +17,9 @@ public class IssueController {
 
     private final IssueService issueService;
 
-    IssueController(IssueService issueService) { this.issueService = issueService; }
+    IssueController(IssueService issueService) {
+        this.issueService = issueService;
+    }
 
     @GetMapping
     public ResponseEntity<List<Issue>> getAllIssues() {
