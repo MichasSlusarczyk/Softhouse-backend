@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.polsl.softhouse.dto.issue.IssueGetDto;
 import pl.polsl.softhouse.dto.issue.IssuePostDto;
 import pl.polsl.softhouse.entities.Issue;
+import pl.polsl.softhouse.entities.enums.WorkStatus;
 import pl.polsl.softhouse.services.IssueService;
 
 import java.util.List;
@@ -22,8 +23,17 @@ public class IssueController {
     }
 
     @GetMapping
-    public ResponseEntity<List<IssueGetDto>> getAllIssues() {
-        return ResponseEntity.ok().body(issueService.getAllIssues());
+    public ResponseEntity<List<IssueGetDto>> getIssues(@RequestParam(required = false) Long userId,
+                                                       @RequestParam(required = false) WorkStatus status) {
+        if(userId != null && status != null) {
+            return ResponseEntity.ok().body(issueService.getIssuesByUserIdAndStatus(userId, status));
+        }
+        else {
+            return ResponseEntity.ok().body(
+                    userId != null ? issueService.getIssuesByUserId(userId) :
+                            status != null ? issueService.getIssuesByStatus(status) : issueService.getAllIssues()
+            );
+        }
     }
 
     @GetMapping(path = "{id}")
@@ -31,20 +41,15 @@ public class IssueController {
         return ResponseEntity.ok().body(issueService.getIssueById(id));
     }
 
-    @PostMapping
+    @PostMapping(path = "addIssue")
     public ResponseEntity<Void> addIssue(@RequestBody IssuePostDto issuePostDto) {
         issueService.addIssue(issuePostDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping(path = "{id}")
-    public ResponseEntity<Void> updateIssue(@PathVariable Long id, @RequestBody IssuePostDto issuePostDto) {
+    @PutMapping(path = "updateIssue")
+    public ResponseEntity<Void> updateIssue(@RequestParam Long id, @RequestBody IssuePostDto issuePostDto) {
         issueService.updateIssue(id, issuePostDto);
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping(path = "productManagersIssues/{userId}")
-    public ResponseEntity<List<IssueGetDto>> getIssuesByUserId(@PathVariable Long userId) {
-        return ResponseEntity.ok().body(issueService.getIssuesByUserId(userId));
     }
 }

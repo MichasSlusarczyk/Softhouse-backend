@@ -6,6 +6,7 @@ import pl.polsl.softhouse.dto.issue.IssueMapper;
 import pl.polsl.softhouse.dto.issue.IssuePostDto;
 import pl.polsl.softhouse.entities.Issue;
 import pl.polsl.softhouse.entities.enums.UserRole;
+import pl.polsl.softhouse.entities.enums.WorkStatus;
 import pl.polsl.softhouse.exceptions.AuthorizationException;
 import pl.polsl.softhouse.exceptions.InvalidDataException;
 import pl.polsl.softhouse.exceptions.issue.IssueNotFoundException;
@@ -85,10 +86,29 @@ public class IssueService {
         if (userId == null) {
             throw new InvalidDataException("No user id provided.");
         }
-
         checkUserOrThrow(userId);
-
         return issueRepository.findAllIssuesByUserId(userId)
+                .stream()
+                .map(issueMapper::issueToGetDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<IssueGetDto> getIssuesByStatus(WorkStatus status) {
+        if(status == null) {
+            throw new InvalidDataException("No status provided.");
+        }
+        return issueRepository.findAllIssuesByStatus(status)
+                .stream()
+                .map(issueMapper::issueToGetDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<IssueGetDto> getIssuesByUserIdAndStatus(Long userId, WorkStatus status) {
+        if(userId == null || status == null) {
+            throw new InvalidDataException("No userId or status provided.");
+        }
+        checkUserOrThrow(userId);
+        return issueRepository.findAllIssuesByUserIdAndStatus(userId, status)
                 .stream()
                 .map(issueMapper::issueToGetDto)
                 .collect(Collectors.toList());
