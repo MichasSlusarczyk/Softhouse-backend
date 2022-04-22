@@ -1,6 +1,12 @@
 package pl.polsl.softhouse.services;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import pl.polsl.softhouse.components.security.JwtUtil;
 import pl.polsl.softhouse.dto.user.UserGetDto;
 import pl.polsl.softhouse.dto.user.UserMapper;
 import pl.polsl.softhouse.dto.user.UserPostDto;
@@ -15,7 +21,6 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,10 +31,16 @@ public class UserService {
     private final UserMapper userMapper;
     private final Validator validator;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper, Validator validator) {
+    private final AuthenticationManager authManager;
+
+    public UserService(UserRepository userRepository,
+                       UserMapper userMapper,
+                       Validator validator,
+                       AuthenticationManager authManager) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.validator = validator;
+        this.authManager = authManager;
     }
 
     public List<UserGetDto> getAllUsers() {
@@ -89,18 +100,21 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public UserGetDto authorizeUser(String username, String password) {
-        if (username == null || password == null) {
+    public String loginAndGetJwt(String username, String password) {
+        if (username == null || username.isBlank() ||
+                password == null || password.isBlank()) {
             throw new InvalidDataException("No data sent.");
         }
 
-        UserEntity user = userRepository.findByUsername(username)
-                .orElseThrow(() -> UserNotFoundException.fromUsername(username));
+        try {
+            Authentication auth = authManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password)
+            );
+            User user = (User) auth.getPrincipal();
 
-        if (user.getPassword().equals(password)) {
-            return userMapper.userToGetDto(user);
-        } else {
-            throw new AuthenticationException("Invalid password.");
+            return new JwtUtil().generateToken(user.getUsername());
+        } catch (BadCredentialsException e) {
+            throw new AuthenticationException(e.getMessage());
         }
     }
 

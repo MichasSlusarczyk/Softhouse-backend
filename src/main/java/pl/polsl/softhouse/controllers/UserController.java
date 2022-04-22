@@ -1,5 +1,6 @@
 package pl.polsl.softhouse.controllers;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -14,7 +15,6 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping(path = "api/users")
-@ControllerAdvice
 public class UserController {
 
     private final UserService userService;
@@ -57,10 +57,11 @@ public class UserController {
     }
 
     @PostMapping(path = "auth")
-    public ResponseEntity<UserGetDto> authorizeUser(@RequestBody UserAuthDto authDto) {
-        UserGetDto userDto =
-                userService.authorizeUser(authDto.getUsername(), authDto.getPassword());
+    public ResponseEntity<Void> authenticateUser(@RequestBody UserAuthDto authDto) {
+        String jwt = userService.loginAndGetJwt(authDto.getUsername(), authDto.getPassword());
 
-        return ResponseEntity.ok().body(userDto);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, jwt)
+                .build();
     }
 }

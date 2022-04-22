@@ -24,7 +24,14 @@ public class UserEntityDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> UserNotFoundException.fromUsername(username));
+        boolean active = user.getActive();
 
-        return new User(user.getUsername(), user.getPassword(), new ArrayList<>());
+        return new User(user.getUsername(),
+                user.getPassword(),
+                active,
+                active,
+                active,
+                active,
+                new ArrayList<>());
     }
 }
