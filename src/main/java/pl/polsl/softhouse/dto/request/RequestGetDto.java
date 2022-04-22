@@ -1,36 +1,22 @@
-package pl.polsl.softhouse.dto.issue;
+package pl.polsl.softhouse.dto.request;
 
-import pl.polsl.softhouse.entities.Task;
-import pl.polsl.softhouse.entities.enums.IssueType;
+
 import pl.polsl.softhouse.entities.enums.WorkPriority;
 import pl.polsl.softhouse.entities.enums.WorkStatus;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
+public class RequestGetDto {
 
-public class IssueGetDto {
     private Long id;
-    private WorkStatus status;
+    private Long accountManagerId;
+    private String description;
     private String result;
+    private WorkStatus status;
     private LocalDateTime dateOpened;
     private LocalDateTime dateInProgress;
     private LocalDateTime dateClosed;
     private LocalDateTime deadline;
-    private WorkPriority priority;
-    private Long productManagerId;
-//    private List<Task> tasks; // TODO: Wait for Task implementation.
-    private String description;
-    private IssueType type;
-    private Long requestId;
-
-    public String getResult() {
-        return result;
-    }
-
-    public void setResult(String result) {
-        this.result = result;
-    }
 
     public Long getId() {
         return id;
@@ -38,6 +24,30 @@ public class IssueGetDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getAccountManagerId() {
+        return accountManagerId;
+    }
+
+    public void setAccountManagerId(Long accountManagerId) {
+        this.accountManagerId = accountManagerId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
     }
 
     public WorkStatus getStatus() {
@@ -88,44 +98,6 @@ public class IssueGetDto {
         this.priority = priority;
     }
 
-    public Long getProductManagerId() {
-        return productManagerId;
-    }
+    private WorkPriority priority;
 
-    public void setProductManagerId(Long productManagerId) {
-        this.productManagerId = productManagerId;
-    }
-
-    // TODO: Wait for Task implementation.
-//    public List<Task> getTasks() {
-//        return tasks;
-//    }
-//
-//    public void setTasks(List<Task> tasks) {
-//        this.tasks = tasks;
-//    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public IssueType getType() {
-        return type;
-    }
-
-    public void setType(IssueType type) {
-        this.type = type;
-    }
-
-    public Long getRequestId() {
-        return requestId;
-    }
-
-    public void setRequestId(Long requestId) {
-        this.requestId = requestId;
-    }
 }

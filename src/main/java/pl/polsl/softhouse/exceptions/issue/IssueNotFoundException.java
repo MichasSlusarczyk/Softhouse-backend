@@ -1,16 +1,13 @@
 package pl.polsl.softhouse.exceptions.issue;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.client.HttpStatusCodeException;
+import pl.polsl.softhouse.exceptions.NotFoundException;
 
-@ResponseStatus(code = HttpStatus.NOT_FOUND)
-public class IssueNotFoundException extends HttpStatusCodeException {
+public class IssueNotFoundException extends NotFoundException {
     public IssueNotFoundException(String message) {
-        super(HttpStatus.NOT_FOUND, message);
+        super(message);
     }
 
-    public IssueNotFoundException(Long id) {
-        this("The issue with id " + id + " does not exists.");
+    public IssueNotFoundException(long id) {
+        super("Issue", id);
     }
 }

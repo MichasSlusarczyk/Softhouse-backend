@@ -6,19 +6,15 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.polsl.softhouse.dto.user.UserAuthDto;
 import pl.polsl.softhouse.dto.user.UserGetDto;
 import pl.polsl.softhouse.dto.user.UserPostDto;
-import pl.polsl.softhouse.exceptions.InvalidDataException;
-import pl.polsl.softhouse.exceptions.user.UserException;
 import pl.polsl.softhouse.services.UserService;
 
-import javax.validation.ConstraintViolationException;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin
 @RestController
 @RequestMapping(path = "api/users")
+@ControllerAdvice
 public class UserController {
 
     private final UserService userService;
@@ -66,26 +62,5 @@ public class UserController {
                 userService.authorizeUser(authDto.getUsername(), authDto.getPassword());
 
         return ResponseEntity.ok().body(userDto);
-    }
-
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Map<String, String>> handleConstraintViolationExceptions(ConstraintViolationException e) {
-        Map<String, String> errors = new HashMap<>();
-        e.getConstraintViolations()
-                .forEach((violation) -> errors.put(
-                        violation.getPropertyPath().toString(),
-                        violation.getMessage()));
-
-        return ResponseEntity.badRequest().body(errors);
-    }
-
-    @ExceptionHandler(UserException.class)
-    public ResponseEntity<String> handleUserExceptions(UserException e) {
-        return new ResponseEntity<>(e.getMessage(), e.getStatusCode());
-    }
-
-    @ExceptionHandler(InvalidDataException.class)
-    public ResponseEntity<String> handleInvalidDataException(InvalidDataException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

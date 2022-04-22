@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 @Table(name = "clients")
 public class Client {
     
-    public static final int MAX_NAME_LENGTH = 256;
+    public static final int MAX_NAME_LENGTH = 40;
     private static final String GEN_NAME = "client_sequence";
 
     @Id
@@ -21,7 +21,12 @@ public class Client {
     @Column(nullable = false, length = MAX_NAME_LENGTH)
     @NotNull
     @Size(min = 3, max = MAX_NAME_LENGTH)
-    private String name;
+    private String firstName;
+
+    @Column(nullable = false, length = MAX_NAME_LENGTH)
+    @NotNull
+    @Size(min = 3, max = MAX_NAME_LENGTH)
+    private String lastName;
 
     @OneToMany(mappedBy = "client")
     private List<SystemClient> systemAssoc;
@@ -34,12 +39,12 @@ public class Client {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public List<SystemClient> getSystemAssoc() {
@@ -48,5 +53,13 @@ public class Client {
 
     public void setSystemAssoc(List<SystemClient> systemAssoc) {
         this.systemAssoc = systemAssoc;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }
