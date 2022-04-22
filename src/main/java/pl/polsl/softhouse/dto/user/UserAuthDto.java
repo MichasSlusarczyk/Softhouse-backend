@@ -1,20 +1,9 @@
 package pl.polsl.softhouse.dto.user;
 
-import java.io.Serializable;
+public class UserAuthDto {
 
-public class UserAuthDto implements Serializable {
-    private Long id;
     private String username;
     private String password;
-    private Boolean active = true;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;
@@ -30,13 +19,5 @@ public class UserAuthDto implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
     }
 }

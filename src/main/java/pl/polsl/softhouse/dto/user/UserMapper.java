@@ -20,6 +20,4 @@ public interface UserMapper {
 
     @Mapping(target = "id", ignore = true)
     UserEntity updateUser(UserPostDto userDto, @MappingTarget UserEntity user);
-
-    UserAuthDto userToAuthDto(UserEntity user);
 }
