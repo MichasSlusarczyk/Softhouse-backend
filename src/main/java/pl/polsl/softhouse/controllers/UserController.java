@@ -1,9 +1,9 @@
 package pl.polsl.softhouse.controllers;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import pl.polsl.softhouse.dto.user.UserAuthDto;
 import pl.polsl.softhouse.dto.user.UserGetDto;
 import pl.polsl.softhouse.dto.user.UserPostDto;
 import pl.polsl.softhouse.exceptions.InvalidDataException;
@@ -15,7 +15,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -62,12 +61,11 @@ public class UserController {
     }
 
     @PostMapping(path = "auth")
-    public ResponseEntity<UserGetDto> authorizeUser(@RequestBody Map<String, String> json) {
+    public ResponseEntity<UserGetDto> authorizeUser(@RequestBody UserAuthDto authDto) {
+        UserGetDto userDto =
+                userService.authorizeUser(authDto.getUsername(), authDto.getPassword());
 
-        String username = json.get("username"),
-                password = json.get("password");
-
-        return ResponseEntity.ok().body(userService.authorizeUser(username, password));
+        return ResponseEntity.ok().body(userDto);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
