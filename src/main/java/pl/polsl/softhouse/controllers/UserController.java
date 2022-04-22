@@ -56,8 +56,11 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(path = "username/{username}")
-    public ResponseEntity<UserAuthDto> getUserByUsername(@PathVariable String username) {
-        return ResponseEntity.ok().body(userService.getUserAuthByUsername(username));
+    @PostMapping(path = "auth")
+    public ResponseEntity<UserGetDto> authorizeUser(@RequestBody UserAuthDto authDto) {
+        UserGetDto userDto =
+                userService.authorizeUser(authDto.getUsername(), authDto.getPassword());
+
+        return ResponseEntity.ok().body(userDto);
     }
 }
