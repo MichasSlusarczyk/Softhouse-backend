@@ -6,11 +6,11 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import pl.polsl.softhouse.components.GenericValidator;
-import pl.polsl.softhouse.dto.user.UserAuthDto;
 import pl.polsl.softhouse.dto.user.UserGetDto;
 import pl.polsl.softhouse.dto.user.UserMapper;
 import pl.polsl.softhouse.dto.user.UserPostDto;
 import pl.polsl.softhouse.entities.UserEntity;
+import pl.polsl.softhouse.exceptions.AuthenticationException;
 import pl.polsl.softhouse.exceptions.InvalidDataException;
 import pl.polsl.softhouse.exceptions.user.UserAlreadyExistsException;
 import pl.polsl.softhouse.exceptions.user.UserNotFoundException;
@@ -86,14 +86,19 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public UserAuthDto getUserAuthByUsername(String username) {
-        if (username == null) {
+    public UserGetDto authorizeUser(String username, String password) {
+        if (username == null || password == null) {
             throw new InvalidDataException("No data sent.");
         }
 
-        return userRepository.findByUsername(username)
-                .map(userMapper::userToAuthDto)
+        UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> UserNotFoundException.fromUsername(username));
+
+        if (user.getPassword().equals(password)) {
+            return userMapper.userToGetDto(user);
+        } else {
+            throw new AuthenticationException("Invalid password.");
+        }
     }
 
     private boolean checkIfUsernameUnique(String username) {

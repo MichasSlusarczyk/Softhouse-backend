@@ -10,13 +10,13 @@ import java.util.List;
 @Entity
 @Table(name = "issues")
 public class Issue extends AbstractWorkUnit {
-    
+
     public static final int MAX_DESC_LENGTH = 512;
     private static final String GEN_NAME = "issue_sequence";
 
     @Id
-    @SequenceGenerator(name=GEN_NAME, allocationSize=1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator=GEN_NAME)
+    @SequenceGenerator(name = GEN_NAME, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = GEN_NAME)
     private Long id;
 
     @Column(nullable = false, length = MAX_DESC_LENGTH)

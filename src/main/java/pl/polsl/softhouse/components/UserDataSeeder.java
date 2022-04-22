@@ -6,6 +6,9 @@ import pl.polsl.softhouse.entities.UserEntity;
 import pl.polsl.softhouse.entities.enums.UserRole;
 import pl.polsl.softhouse.repositories.UserRepository;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Component
 public class UserDataSeeder implements CommandLineRunner {
 
@@ -21,16 +24,45 @@ public class UserDataSeeder implements CommandLineRunner {
     }
 
     private void seedUsers() {
-        UserEntity user = new UserEntity(null,
-                "admin",
-                "admin",
-                true,
-                "John",
-                "Admin",
-                UserRole.ADMIN,
-                "user@seeded.com",
-                "123456789");
+        List<UserEntity> users = Arrays.asList(
+                new UserEntity(null,
+                        "admin",
+                        "admin",
+                        true,
+                        "John",
+                        "Admin",
+                        UserRole.ADMIN,
+                        "user@seeded.com",
+                        "123456789"),
+                new UserEntity(null,
+                        "accMan",
+                        "asdf",
+                        true,
+                        "Larwa",
+                        "Kroft",
+                        UserRole.ACCOUNT_MANAGER,
+                        "user@seeded.com",
+                        "123456789"),
+                new UserEntity(null,
+                        "prodMan",
+                        "nostromo",
+                        true,
+                        "Ellen",
+                        "Ripley",
+                        UserRole.PRODUCT_MANAGER,
+                        "user@seeded.com",
+                        "123456789"),
+                new UserEntity(null,
+                        "worker",
+                        "zwiazekzawodowy",
+                        true,
+                        "Adrian",
+                        "Zandberg",
+                        UserRole.WORKER,
+                        "user@seeded.com",
+                        "123456789")
+        );
 
-        userRepository.save(user);
+        userRepository.saveAll(users);
     }
 }

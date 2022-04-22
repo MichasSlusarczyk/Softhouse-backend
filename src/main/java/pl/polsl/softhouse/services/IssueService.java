@@ -7,14 +7,15 @@ import pl.polsl.softhouse.dto.issue.IssueMapper;
 import pl.polsl.softhouse.dto.issue.IssuePostDto;
 import pl.polsl.softhouse.entities.Issue;
 import pl.polsl.softhouse.entities.enums.UserRole;
+import pl.polsl.softhouse.exceptions.AuthorizationException;
 import pl.polsl.softhouse.exceptions.InvalidDataException;
 import pl.polsl.softhouse.exceptions.issue.IssueNotFoundException;
-import pl.polsl.softhouse.exceptions.user.UserException;
 import pl.polsl.softhouse.exceptions.user.UserNotFoundException;
 import pl.polsl.softhouse.repositories.IssueRepository;
 import pl.polsl.softhouse.repositories.UserRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class IssueService {
@@ -30,51 +31,71 @@ public class IssueService {
         this.validator = validator;
     }
 
-    public List<Issue> getAllIssues() {
-        return issueRepository.findAll();
+    public List<IssueGetDto> getAllIssues() {
+        return issueRepository.findAll()
+                .stream()
+                .map(issueMapper::issueToGetDto)
+                .collect(Collectors.toList());
     }
 
-    public Issue getIssueById(Long id) {
-        if(id == null)
+    public IssueGetDto getIssueById(Long id) {
+        if (id == null) {
             throw new InvalidDataException("No id provided.");
+        }
+
         return issueRepository
                 .findById(id)
+                .map(issueMapper::issueToGetDto)
                 .orElseThrow(() -> new IssueNotFoundException(id));
     }
 
-    public void updateIssue(Long id, IssueGetDto issueGetDto) {
-        if(id == null || issueGetDto == null)
+    public void updateIssue(Long id, IssuePostDto issueDto) {
+        if (id == null || issueDto == null) {
             throw new InvalidDataException("No id or data provided.");
-        if(issueGetDto.getProductManagerId() != null)
-            checkUser(issueGetDto.getProductManagerId());
+        }
+
+        if (issueDto.getProductManagerId() != null) {
+            checkUserOrThrow(issueDto.getProductManagerId());
+        }
+
         Issue issue = issueRepository
                 .findById(id)
-                .map((foundIssue) -> issueMapper.updateIssue(issueGetDto, foundIssue))
+                .map((foundIssue) -> issueMapper.updateIssue(issueDto, foundIssue))
                 .orElseThrow(() -> new IssueNotFoundException(id));
+
         issueRepository.save(issue);
     }
 
     public void addIssue(IssuePostDto issuePostDto) {
-        if(issuePostDto == null || issuePostDto.getProductManagerId() == null)
+        if (issuePostDto == null || issuePostDto.getProductManagerId() == null) {
             throw new InvalidDataException("No data or product manager id provided");
-        checkUser(issuePostDto.getProductManagerId());
-        Issue issue = issueMapper.createIssueFromIssuePostDto(issuePostDto);
+        }
+
+        checkUserOrThrow(issuePostDto.getProductManagerId());
+        Issue issue = issueMapper.createIssueFromPostDto(issuePostDto);
         validator.validateOrThrow(issue);
+
         issueRepository.save(issue);
     }
 
-    public List<Issue> getIssuesByUserId(Long userId) {
-        if(userId == null)
+    public List<IssueGetDto> getIssuesByUserId(Long userId) {
+        if (userId == null) {
             throw new InvalidDataException("No user id provided.");
-        checkUser(userId);
-        return issueRepository.findAllIssuesByUserId(userId);
+        }
+
+        checkUserOrThrow(userId);
+
+        return issueRepository.findAllIssuesByUserId(userId)
+                .stream()
+                .map(issueMapper::issueToGetDto)
+                .collect(Collectors.toList());
     }
 
-    private void checkUser(long userId) {
-        if(userRepository
-                .findById(userId)
+    private void checkUserOrThrow(long userId) {
+        if (userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId))
-                .getRole() != UserRole.PRODUCT_MANAGER)
-            throw new UserException("User with id " + userId + " does not have authority to manage issues.");
+                .getRole() != UserRole.PRODUCT_MANAGER) {
+            throw new AuthorizationException("User with id " + userId + " does not have the authority to manage issues.");
+        }
     }
 }

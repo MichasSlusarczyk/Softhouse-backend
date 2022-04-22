@@ -3,14 +3,14 @@ package pl.polsl.softhouse.services;
 import org.springframework.stereotype.Service;
 import pl.polsl.softhouse.components.GenericValidator;
 import pl.polsl.softhouse.dto.request.RequestGetDto;
+import pl.polsl.softhouse.dto.request.RequestMapper;
 import pl.polsl.softhouse.dto.request.RequestPostDto;
 import pl.polsl.softhouse.dto.request.RequestPutDto;
-import pl.polsl.softhouse.dto.request.RequestMapper;
 import pl.polsl.softhouse.entities.Request;
 import pl.polsl.softhouse.entities.enums.UserRole;
+import pl.polsl.softhouse.exceptions.AuthorizationException;
 import pl.polsl.softhouse.exceptions.InvalidDataException;
 import pl.polsl.softhouse.exceptions.request.RequestNotFoundException;
-import pl.polsl.softhouse.exceptions.user.UserException;
 import pl.polsl.softhouse.exceptions.user.UserNotFoundException;
 import pl.polsl.softhouse.repositories.RequestRepository;
 import pl.polsl.softhouse.repositories.UserRepository;
@@ -36,7 +36,7 @@ public class RequestService {
     public List<RequestGetDto> getAllRequests() {
 
         ArrayList<RequestGetDto> resultList = new ArrayList<>();
-        requestRepository.findAll().forEach((c) ->  resultList.add(requestMapper.getRequest(c)));
+        requestRepository.findAll().forEach((c) -> resultList.add(requestMapper.getRequest(c)));
         return resultList;
     }
 
@@ -59,7 +59,7 @@ public class RequestService {
         checkUserOrThrow(userId);
 
         ArrayList<RequestGetDto> resultList = new ArrayList<>();
-        requestRepository.findAllByUserId(userId).forEach((c) ->  resultList.add(requestMapper.getRequest(c)));
+        requestRepository.findAllByUserId(userId).forEach((c) -> resultList.add(requestMapper.getRequest(c)));
         return resultList;
     }
 
@@ -80,7 +80,7 @@ public class RequestService {
             throw new InvalidDataException(("No data sent."));
         }
 
-        if(requestPostDto.getAccountManagerId() == null) {
+        if (requestPostDto.getAccountManagerId() == null) {
             throw new InvalidDataException("No account manager id provided.");
         }
 
@@ -98,7 +98,7 @@ public class RequestService {
             throw new InvalidDataException(("No id provided."));
         }
 
-        if(requestPutDto.getAccountManagerId() != null) {
+        if (requestPutDto.getAccountManagerId() != null) {
             checkUserOrThrow(requestPutDto.getAccountManagerId());
         }
 
@@ -111,11 +111,11 @@ public class RequestService {
         requestRepository.save(request);
     }
 
-    public void checkUserOrThrow(Long userId){
-        if(userRepository
+    public void checkUserOrThrow(Long userId) {
+        if (userRepository
                 .findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId))
                 .getRole() != UserRole.ACCOUNT_MANAGER)
-            throw new UserException("User with id " + userId + " does not have authority to manage requests.");
+            throw new AuthorizationException("User with id " + userId + " does not have authority to manage requests.");
     }
 }
