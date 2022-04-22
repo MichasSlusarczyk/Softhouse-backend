@@ -1,11 +1,11 @@
 package pl.polsl.softhouse.services;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import pl.polsl.softhouse.components.GenericValidator;
 import pl.polsl.softhouse.dto.user.UserAuthDto;
 import pl.polsl.softhouse.dto.user.UserGetDto;
 import pl.polsl.softhouse.dto.user.UserMapper;
@@ -16,18 +16,14 @@ import pl.polsl.softhouse.exceptions.user.UserAlreadyExistsException;
 import pl.polsl.softhouse.exceptions.user.UserNotFoundException;
 import pl.polsl.softhouse.repositories.UserRepository;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validator;
-
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final Validator validator;
+    private final GenericValidator<UserEntity> validator;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper, Validator validator) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, GenericValidator<UserEntity> validator) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.validator = validator;
@@ -60,7 +56,7 @@ public class UserService {
         }
 
         UserEntity user = userMapper.createUserFromDto(userDto);
-        validateOrThrow(user);
+        validator.validateOrThrow(user);
 
         return userRepository.save(user).getId();
     }
@@ -85,7 +81,7 @@ public class UserService {
         UserEntity user = userRepository.findById(id)
                 .map(foundUser -> userMapper.updateUser(userDto, foundUser))
                 .orElseThrow(() -> new UserNotFoundException(id));
-        validateOrThrow(user);
+        validator.validateOrThrow(user);
 
         userRepository.save(user);
     }
@@ -98,13 +94,6 @@ public class UserService {
         return userRepository.findByUsername(username)
                 .map(userMapper::userToAuthDto)
                 .orElseThrow(() -> UserNotFoundException.fromUsername(username));
-    }
-
-    private void validateOrThrow(UserEntity user) {
-        Set<ConstraintViolation<UserEntity>> violations = validator.validate(user);
-        if (!violations.isEmpty()) {
-            throw new ConstraintViolationException(violations);
-        }
     }
 
     private boolean checkIfUsernameUnique(String username) {

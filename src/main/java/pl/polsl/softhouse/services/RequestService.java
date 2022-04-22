@@ -1,6 +1,7 @@
 package pl.polsl.softhouse.services;
 
 import org.springframework.stereotype.Service;
+import pl.polsl.softhouse.components.GenericValidator;
 import pl.polsl.softhouse.dto.request.RequestGetDto;
 import pl.polsl.softhouse.dto.request.RequestPostDto;
 import pl.polsl.softhouse.dto.request.RequestPutDto;
@@ -14,12 +15,8 @@ import pl.polsl.softhouse.exceptions.user.UserNotFoundException;
 import pl.polsl.softhouse.repositories.RequestRepository;
 import pl.polsl.softhouse.repositories.UserRepository;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validator;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class RequestService {
@@ -27,9 +24,9 @@ public class RequestService {
     private final RequestRepository requestRepository;
     private final UserRepository userRepository;
     private final RequestMapper requestMapper;
-    private final Validator validator;
+    private final GenericValidator<Request> validator;
 
-    public RequestService(RequestRepository requestRepository, UserRepository userRepository, RequestMapper requestMapper, Validator validator) {
+    public RequestService(RequestRepository requestRepository, UserRepository userRepository, RequestMapper requestMapper, GenericValidator<Request> validator) {
         this.requestRepository = requestRepository;
         this.userRepository = userRepository;
         this.requestMapper = requestMapper;
@@ -90,7 +87,7 @@ public class RequestService {
         checkUserOrThrow(requestPostDto.getAccountManagerId());
 
         Request request = requestMapper.addRequest(requestPostDto);
-        validateOrThrow(request);
+        validator.validateOrThrow(request);
 
         return requestRepository.save(request).getId();
     }
@@ -120,12 +117,5 @@ public class RequestService {
                 .orElseThrow(() -> new UserNotFoundException(userId))
                 .getRole() != UserRole.ACCOUNT_MANAGER)
             throw new UserException("User with id " + userId + " does not have authority to manage requests.");
-    }
-
-    private void validateOrThrow(Request request) {
-        Set<ConstraintViolation<Request>> violations = validator.validate(request);
-        if (!violations.isEmpty()) {
-            throw new ConstraintViolationException(violations);
-        }
     }
 }

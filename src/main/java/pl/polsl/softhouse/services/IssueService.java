@@ -1,6 +1,7 @@
 package pl.polsl.softhouse.services;
 
 import org.springframework.stereotype.Service;
+import pl.polsl.softhouse.components.GenericValidator;
 import pl.polsl.softhouse.dto.issue.IssueGetDto;
 import pl.polsl.softhouse.dto.issue.IssueMapper;
 import pl.polsl.softhouse.dto.issue.IssuePostDto;
@@ -13,20 +14,16 @@ import pl.polsl.softhouse.exceptions.user.UserNotFoundException;
 import pl.polsl.softhouse.repositories.IssueRepository;
 import pl.polsl.softhouse.repositories.UserRepository;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validator;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class IssueService {
     private final IssueRepository issueRepository;
     private final IssueMapper issueMapper;
     private final UserRepository userRepository;
-    private final Validator validator;
+    private final GenericValidator<Issue> validator;
 
-    public IssueService(IssueRepository issueRepository, IssueMapper issueMapper, UserRepository userRepository, Validator validator) {
+    public IssueService(IssueRepository issueRepository, IssueMapper issueMapper, UserRepository userRepository, GenericValidator<Issue> validator) {
         this.issueRepository = issueRepository;
         this.issueMapper = issueMapper;
         this.userRepository = userRepository;
@@ -62,7 +59,7 @@ public class IssueService {
             throw new InvalidDataException("No data or product manager id provided");
         checkUser(issuePostDto.getProductManagerId());
         Issue issue = issueMapper.createIssueFromIssuePostDto(issuePostDto);
-        validate(issue);
+        validator.validateOrThrow(issue);
         issueRepository.save(issue);
     }
 
@@ -71,12 +68,6 @@ public class IssueService {
             throw new InvalidDataException("No user id provided.");
         checkUser(userId);
         return issueRepository.findAllIssuesByUserId(userId);
-    }
-
-    private void validate(Issue issue) {
-        Set<ConstraintViolation<Issue>> violations = validator.validate(issue);
-        if(!violations.isEmpty())
-            throw new ConstraintViolationException(violations);
     }
 
     private void checkUser(long userId) {
